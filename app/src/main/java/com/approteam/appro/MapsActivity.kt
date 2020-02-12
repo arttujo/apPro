@@ -1,19 +1,17 @@
 package com.approteam.appro
 
-import android.Manifest
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.IntentSender
+import android.location.Address
+import android.location.Geocoder
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,6 +20,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_maps.*
+import java.io.IOException
+import java.util.*
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -31,30 +31,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         var latitude = 0.0
         var longtitude = 0.0
+        const val REQUEST_CHECK_SETTINGS = 43
     }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var mLocationRequest: LocationRequest? = null
-    private var mLocationCallBack: LocationCallback? = null
-    private var UPDATE_INTERVAL: Long = 7500
-    private val FASTEST_INTERVAL: Long = 5000
-    private var updateEnabled = false
+    private lateinit var mLocationRequest: LocationRequest
     private val MY_PERMISSION_FINE_LOCATION = 101
-
-    data class LatLong(var latitude: Double?, var longtitude: Double?)
-
+    private lateinit var locationManager: LocationManager
     private val mapLocation = LatLng(latitude, longtitude)
-
-    var locationData: MutableList<LatLong> = java.util.ArrayList()
-
+    var locationData: MutableList<LatLng> = java.util.ArrayList()
     private lateinit var mMap: GoogleMap
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-        val locationManager: LocationManager =
-            getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         // Snackbar
         val snackB = Snackbar.make(
             findViewById(R.id.mapActivity),
@@ -69,70 +63,95 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         btnCenter.setOnClickListener {
+            getCurrentLocation()
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapLocation, 10.toFloat()))
             snackB.show()
         }
-                // Locationrequest initializing
-        mLocationRequest = LocationRequest()
-        mLocationRequest!!.interval = UPDATE_INTERVAL
-        mLocationRequest!!.fastestInterval = FASTEST_INTERVAL
-        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        // Callback for location updates
-        mLocationCallBack =
-            object : LocationCallback() {
-                override fun onLocationResult(p0: LocationResult?) {
-                    super.onLocationResult(p0)
-                    for (location in p0!!.locations) {
-                        if (location != null) {
-                            Log.d("DBG", "updated location: ${location.latitude}")
-                            latitude = location.latitude
-                            longtitude = location.longitude
-                            bundle.putDouble("latitude", latitude)
-                            bundle.putDouble("longtitude", longtitude)
-                            locationData.add(LatLong(latitude, longtitude))
-                        }
-                    }
-                }
-            }
-        fusedLocationClient =
-            LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.requestLocationUpdates(LocationRequest(), mLocationCallBack, null)
-
-        if (!updateEnabled) {
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-            ) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("This app requires permission for location")
-                builder.setMessage("Open settings?")
-                builder.setPositiveButton("Ok") { _, _ ->
-                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    startActivity(intent)
-                }
-                builder.setNegativeButton("No") { _, _ ->
-                    Toast.makeText(
-                        applicationContext,
-                        "You need to enable location updates for the app to work",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                builder.create()
-                builder.show()
-            }
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-            ) {
-                updateEnabled = true
-                Toast.makeText(applicationContext, "Enabled updates", Toast.LENGTH_SHORT)
-                    .show()
-                startLocationUpdates()
-            }
-        } else {
-            updateEnabled = false
-            Toast.makeText(applicationContext, "Disabled Updates", Toast.LENGTH_SHORT)
-                .show()
-            stopLocationUpdates()
-        }
+        fusedLocationClient = FusedLocationProviderClient(this)
 
     }
+    private fun getCurrentLocation() {
+        mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = (10 * 1000).toLong()
+        mLocationRequest.fastestInterval = 2000
+
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest)
+        val locationSettingsRequest = builder.build()
+
+        val result = LocationServices.getSettingsClient(this).checkLocationSettings(locationSettingsRequest)
+        result.addOnCompleteListener { task ->
+            try {
+                val response = task.getResult(ApiException::class.java)
+                if (response!!.locationSettingsStates.isLocationPresent){
+                    getLastLocation()
+                }
+            } catch (exception: ApiException) {
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+                        val resolvable = exception as ResolvableApiException
+                        resolvable.startResolutionForResult(this, REQUEST_CHECK_SETTINGS)
+                    } catch (e: IntentSender.SendIntentException) {
+                    } catch (e: ClassCastException) {
+                    }
+
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> { }
+                }
+            }
+        }
+    }
+    private fun getLastLocation() {
+        fusedLocationClient.lastLocation
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful && task.result != null) {
+                    val mLastLocation = task.result
+
+                    var address = "No known address"
+
+                    val gcd = Geocoder(this, Locale.getDefault())
+                    val addresses: List<Address>
+                    try {
+                        addresses = gcd.getFromLocation(mLastLocation!!.latitude, mLastLocation.longitude, 1)
+                        locationData.add(LatLng(mLastLocation.latitude, mLastLocation.longitude))
+                        if (addresses.isNotEmpty()) {
+                            address = addresses[0].getAddressLine(0)
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    mMap.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(mLastLocation!!.latitude, mLastLocation.longitude))
+                            .title("Current Location")
+                            .snippet(address)
+                    )
+
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(LatLng(mLastLocation.latitude, mLastLocation.longitude))
+                        .zoom(17f)
+                        .build()
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                } else {
+                    Toast.makeText(this, "No current location found", Toast.LENGTH_LONG).show()
+                }
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        when (requestCode) {
+            REQUEST_CHECK_SETTINGS -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    getCurrentLocation()
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+
+    }
+
 
     // Add navigation back to main page
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -145,10 +164,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
+
     private fun addMarker(latLng: LatLng) {
         mMap.addMarker(MarkerOptions().position(latLng).title("$latitude $longtitude"))
     }
 
+    // can calculate distance between 2 markers
     private fun haversineDistance(point1: LatLng, point2: LatLng): Double {
         val r = 6371 // Radius of earth in KM
         val rlat1 = point1.latitude * (Math.PI / 180)
@@ -166,7 +187,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return d
     }
 
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -178,53 +198,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        // Add a marker in Sydney and move the camera
-        mMap.addMarker(MarkerOptions().position(mapLocation).title("$latitude $longtitude"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapLocation, 10.toFloat()))
-        mMap.setOnMapClickListener {
-            val newMarker = it
-            addMarker(newMarker)
-            mMap.addPolyline(PolylineOptions().add(mapLocation, newMarker))
-            val distance = haversineDistance(mapLocation, newMarker)
-            val distSnack = Snackbar.make(
-                findViewById(R.id.mapActivity),
-                "Distance between markers is: $distance kilometers",
-                Snackbar.LENGTH_LONG
-            )
-            distSnack.show()
-
-
-        }
+        getCurrentLocation()
     }
+
     override fun onPause() {
         super.onPause()
-        stopLocationUpdates()
+        getLastLocation()
     }
 
     override fun onResume() {
         super.onResume()
-        if (updateEnabled) startLocationUpdates()
-    }
-
-    private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallBack, null)
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MY_PERMISSION_FINE_LOCATION
-                )
-            }
-        }
-    }
-
-    private fun stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates((mLocationCallBack))
+        getCurrentLocation()
     }
 }
 
