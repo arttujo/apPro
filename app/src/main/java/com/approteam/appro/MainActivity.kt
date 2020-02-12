@@ -1,17 +1,12 @@
 package com.approteam.appro
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.Menu
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -24,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
 
         bottom_navigation.setOnNavigationItemSelectedListener {menuitem ->
