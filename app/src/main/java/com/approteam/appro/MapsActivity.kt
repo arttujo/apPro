@@ -1,27 +1,56 @@
 package com.approteam.appro
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
-
-
+import kotlinx.android.synthetic.main.activity_maps.*
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
+    companion object {
+        var latitude = 0.0
+        var longtitude = 0.0
+    }
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var mLocationRequest: LocationRequest? = null
+    private var mLocationCallBack: LocationCallback? = null
+    private var UPDATE_INTERVAL: Long = 7500
+    private val FASTEST_INTERVAL: Long = 5000
+    private var updateEnabled = false
+    private val MY_PERMISSION_FINE_LOCATION = 101
+
+    data class LatLong(var latitude: Double?, var longtitude: Double?)
+
     private val mapLocation = LatLng(latitude, longtitude)
+
+    var locationData: MutableList<LatLong> = java.util.ArrayList()
+
+    private lateinit var mMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+        val locationManager: LocationManager =
+            getSystemService(Context.LOCATION_SERVICE) as LocationManager
         // Snackbar
         val snackB = Snackbar.make(
             findViewById(R.id.mapActivity),
@@ -39,6 +68,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapLocation, 10.toFloat()))
             snackB.show()
         }
+                // Locationrequest initializing
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.interval = UPDATE_INTERVAL
+        mLocationRequest!!.fastestInterval = FASTEST_INTERVAL
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        // Callback for location updates
+        mLocationCallBack =
+            object : LocationCallback() {
+                override fun onLocationResult(p0: LocationResult?) {
+                    super.onLocationResult(p0)
+                    for (location in p0!!.locations) {
+                        if (location != null) {
+                            Log.d("DBG", "updated location: ${location.latitude}")
+                            latitude = location.latitude
+                            longtitude = location.longitude
+                        }
+                    }
+                }
+            }
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.requestLocationUpdates(LocationRequest(), mLocationCallBack, null)
 
 
     }
@@ -58,19 +109,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addMarker(MarkerOptions().position(latLng).title("$latitude $longtitude"))
     }
 
-    fun haversineDistance(point1: LatLng, point2: LatLng): Double {
+    private fun haversineDistance(point1: LatLng, point2: LatLng): Double {
         val r = 6371 // Radius of earth in KM
         val rlat1 = point1.latitude * (Math.PI / 180)
         val rlat2 = point2.latitude * (Math.PI / 180)
         val difflat = rlat1 - rlat2
-        val difflon = (point1.longitude - point2.longitude) * (Math.PI/180)
+        val difflon = (point1.longitude - point2.longitude) * (Math.PI / 180)
         val d = 2 * (r * Math.asin(
             Math.sqrt(
                 Math.sin(difflat / 2) * Math.sin(difflat / 2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(
                     difflon / 2
-                ) * Math.sin(difflon / 2))
+                ) * Math.sin(difflon / 2)
             )
         )
+                )
         return d
     }
 
@@ -104,7 +156,44 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
     }
+
+    /*val mapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+    mapFragment.getMapAsync(this)*/
+
+
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (updateEnabled) startLocationUpdates()
+    }
+
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallBack, null)
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    MY_PERMISSION_FINE_LOCATION
+                )
+            }
+        }
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates((mLocationCallBack))
+    }
 }
+
 
 
 
