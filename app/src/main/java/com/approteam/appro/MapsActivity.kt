@@ -9,10 +9,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
-import com.markus.labw2_d3_map.MainActivity.Companion.latitude
-import com.markus.labw2_d3_map.MainActivity.Companion.longtitude
-import kotlinx.android.synthetic.main.activity_maps.*
-import kotlin.math.roundToLong
+
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
