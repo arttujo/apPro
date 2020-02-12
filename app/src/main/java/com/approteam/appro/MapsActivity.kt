@@ -156,12 +156,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
     }
-
-    /*val mapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
-    mapFragment.getMapAsync(this)*/
-
-
-
     override fun onPause() {
         super.onPause()
         stopLocationUpdates()
