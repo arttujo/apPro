@@ -7,11 +7,15 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,10 +23,14 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_maps.*
+import kotlin.math.absoluteValue
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private val bundle = Bundle()
 
     companion object {
         var latitude = 0.0
@@ -83,6 +91,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             Log.d("DBG", "updated location: ${location.latitude}")
                             latitude = location.latitude
                             longtitude = location.longitude
+                            bundle.putDouble("latitude", latitude)
+                            bundle.putDouble("longtitude", longtitude)
+                            locationData.add(LatLong(latitude, longtitude))
                         }
                     }
                 }
@@ -91,6 +102,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this)
         fusedLocationClient.requestLocationUpdates(LocationRequest(), mLocationCallBack, null)
 
+        if (!updateEnabled) {
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            ) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("This app requires permission for location")
+                builder.setMessage("Open settings?")
+                builder.setPositiveButton("Ok") { _, _ ->
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
+                builder.setNegativeButton("No") { _, _ ->
+                    Toast.makeText(
+                        applicationContext,
+                        "You need to enable location updates for the app to work",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                builder.create()
+                builder.show()
+            }
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            ) {
+                updateEnabled = true
+                Toast.makeText(applicationContext, "Enabled updates", Toast.LENGTH_SHORT)
+                    .show()
+                startLocationUpdates()
+            }
+        } else {
+            updateEnabled = false
+            Toast.makeText(applicationContext, "Disabled Updates", Toast.LENGTH_SHORT)
+                .show()
+            stopLocationUpdates()
+        }
 
     }
 
