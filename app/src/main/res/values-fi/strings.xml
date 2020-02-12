@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">apPro</string>
+    <string name="title_activity_maps">Kartta</string>
+    <string name="map">Kartta</string>
+    <string name="scan">Skannaus</string>
+    <string name="home">Koti</string>
+</resources>

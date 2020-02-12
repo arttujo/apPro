@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">apPro</string>
     <string name="title_activity_maps">Map</string>
+    <string name="map">Map</string>
+    <string name="scan">Scan</string>
+    <string name="home">Home</string>
 </resources>
