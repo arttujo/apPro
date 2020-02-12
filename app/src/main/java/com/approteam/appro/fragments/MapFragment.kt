@@ -3,11 +3,13 @@ package com.approteam.appro.fragments
 import android.content.Context
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.approteam.appro.LocationListener
 import com.approteam.appro.MainActivity
 import com.approteam.appro.R
 import com.google.android.gms.location.*
@@ -20,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.map_fragment.*
 
 
-class MapFragment(ctx:Context) : Fragment(), OnMapReadyCallback {
+class MapFragment(ctx:Context) : Fragment(), OnMapReadyCallback, LocationListener {
 
 
     private var mapFragment : SupportMapFragment?=null
@@ -46,6 +48,13 @@ class MapFragment(ctx:Context) : Fragment(), OnMapReadyCallback {
         val helsinki = LatLng(60.19,24.94)
         mMap.addMarker(MarkerOptions().position(helsinki).title("Helsinki"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(helsinki))
+    }
+
+    override fun onLocationResults(lat: Double, lon: Double) {
+        Log.d("DBG","MAP FRAGMENT RECEIVED LOCATION")
+        Log.d("DBG","$lat")
+        Log.d("DBG","$lon")
+
     }
 
 }

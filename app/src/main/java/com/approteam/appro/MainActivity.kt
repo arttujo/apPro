@@ -1,14 +1,17 @@
 package com.approteam.appro
 
 import android.Manifest
+import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.approteam.appro.fragments.HomeFragment
 import com.approteam.appro.fragments.MapFragment
 import com.approteam.appro.fragments.ScanFragment
@@ -18,7 +21,15 @@ import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_main.*
 
 
+interface LocationListener{
+    fun onLocationResults(lat:Double,lon:Double){
+        Log.d("DBG","Location received")
+    }
+}
+
 class MainActivity : AppCompatActivity() {
+
+    var activityCallback: LocationListener? = null
 
     //Fragments
     private val mapFragment = MapFragment(this)
@@ -37,6 +48,10 @@ class MainActivity : AppCompatActivity() {
        // smallestDisplacement = 3f
     }
 
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,9 +59,12 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         supportFragmentManager.beginTransaction().add(R.id.container,homeFragment).commit()
         bottom_navigation.selectedItemId = R.id.navigation_home
-        onLocationResults()
+        activityCallback = mapFragment as LocationListener
+        onLocationResults(this)
         bottomNavListener()
+
     }
+
 
     //creates a listener for the bottom navigation buttons
     private fun bottomNavListener(){
@@ -74,13 +92,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
     //Handles Location results.
-    private fun onLocationResults(){
+    private fun onLocationResults(ctx:Context){
         locationCallback = object : LocationCallback(){
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?:return
                 for (location in locationResult.locations){
                     val lat = location.latitude
                     val lon = location.longitude
+                    activityCallback!!.onLocationResults(lat,lon)
                     Log.d("DBG", "Lat : $lat, Lon: $lon")
                 }
             }
