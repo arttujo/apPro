@@ -1,20 +1,33 @@
 package com.approteam.appro
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.home_list_item.view.*
+import org.jetbrains.anko.doAsync
+import java.lang.Exception
+import java.net.URL
 
 
+data class Sample(val name:String,val desc: String, val pic: String)
+
+object testdata{
+    val hometestdata: MutableList<Sample> = java.util.ArrayList()
+init {
+    hometestdata.add(Sample("Idän Munajahti","Itään mennään","https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"))
+    hometestdata.add(Sample("Hesari","Tere tulemasta stadiin", "https://www.sqoop.co.ug/wp-content/uploads/2016/08/Modern-fashion-party.jpeg"))
+    hometestdata.add(Sample("Lännen Nopein", "Mennää länteen","https://images.cdn.yle.fi/image/upload//w_1200,h_800,f_auto,fl_lossy,q_auto:eco/39-5146485bb73d66ddebe.jpg"))
+}
+}
 
 
-
-data class Sample(val name:String,val desc: String, val pic: Uri)
-
-
-class HomeViewAdapter(val data: List<Sample>,val ctx:Context, val listener: (Sample)->Unit):RecyclerView.Adapter<HomeViewHolder>(){
+class HomeViewAdapter(val data: MutableList<Sample>,val ctx:Context, val listener: (Sample)->Unit):RecyclerView.Adapter<HomeViewHolder>(){
 
     override fun getItemCount(): Int {
         return data.size
@@ -30,8 +43,12 @@ class HomeViewAdapter(val data: List<Sample>,val ctx:Context, val listener: (Sam
 }
 
 class HomeViewHolder(view:View):RecyclerView.ViewHolder(view){
-
+        val picasso = Picasso.get()
     fun bind(ctx: Context,item:Sample,listener: (Sample) -> Unit) = with(itemView){
+        cardTitle.text = item.name
+        cardDesc.text = item.desc
+        picasso.load(item.pic).into(cardImage)
 
+        setOnClickListener { listener(item) }
     }
 }

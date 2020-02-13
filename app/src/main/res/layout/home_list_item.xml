@@ -21,16 +21,19 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="175dp"
+            android:id="@+id/cardImage"
            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="temporary"
+            android:id="@+id/cardTitle"
             android:textSize="30sp" />
 
         <TextView
             android:layout_width="match_parent"
+            android:id="@+id/cardDesc"
             android:layout_height="wrap_content"
             android:text="temporary"/>
 

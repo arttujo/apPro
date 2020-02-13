@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.map_fragment.*
+import java.lang.Exception
 
 class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListener {
 
@@ -75,12 +76,17 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     override fun onLocationResults(lat: Double, lon: Double) {
         // Wait for map to initialize before updating locations
         if (mapInitialized) {
-            currentLocation = LatLng(lat, lon)
-            btnCenter.isEnabled = true
-            mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
-            Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
-            Log.d("DBG", "$lat")
-            Log.d("DBG", "$lon")
+            try {
+                currentLocation = LatLng(lat, lon)
+                btnCenter.isEnabled = true
+                mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
+                Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
+                Log.d("DBG", "$lat")
+                Log.d("DBG", "$lon")
+            } catch (e:Exception){
+                Log.d("DBG",e.toString())
+            }
+
         }
 
     }
