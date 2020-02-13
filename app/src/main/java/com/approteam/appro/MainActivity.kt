@@ -3,10 +3,12 @@ package com.approteam.appro
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.approteam.appro.fragments.HomeFragment
@@ -14,6 +16,7 @@ import com.approteam.appro.fragments.MapFragment
 import com.approteam.appro.fragments.ScanFragment
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.map_fragment.*
 
 
 interface LocationListener{
@@ -37,24 +40,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var locationCallback: LocationCallback
     private var requestingLocationUpdates = false
     private var locationRequest = LocationRequest.create()?.apply {
-        interval = 5*1000
+        interval = 5*500
         fastestInterval = 10*1000
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
        // smallestDisplacement = 3f
     }
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         permissionRequest()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         supportFragmentManager.beginTransaction().add(R.id.container,homeFragment).commit()
         bottom_navigation.selectedItemId = R.id.navigation_home
-        activityCallback = mapFragment as LocationListener
+        activityCallback = mapFragment
         onLocationResults(this)
         bottomNavListener()
 
