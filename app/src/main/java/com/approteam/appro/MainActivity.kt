@@ -4,19 +4,23 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.approteam.appro.fragments.HomeFragment
 import com.approteam.appro.fragments.MapFragment
 import com.approteam.appro.fragments.ScanFragment
 import com.google.android.gms.location.*
+import com.google.zxing.Result
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.map_fragment.*
+import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 
 interface LocationListener{
@@ -38,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val LOCATION_REQUEST_CODE = 101
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+
     private var requestingLocationUpdates = false
     private var locationRequest = LocationRequest.create()?.apply {
         interval = 5*500
@@ -59,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavListener()
 
     }
+
 
 
     //creates a listener for the bottom navigation buttons

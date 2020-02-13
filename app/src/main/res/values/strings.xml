@@ -4,4 +4,5 @@
     <string name="map">Map</string>
     <string name="scan">Scan</string>
     <string name="home">Home</string>
+    <string name="fit_image_to_scan">Image fit for scan</string>
 </resources>
