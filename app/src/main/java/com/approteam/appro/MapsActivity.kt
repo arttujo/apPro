@@ -7,6 +7,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,10 +37,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mLocationRequest: LocationRequest
-    private val MY_PERMISSION_FINE_LOCATION = 101
-    private lateinit var locationManager: LocationManager
     private val mapLocation = LatLng(latitude, longtitude)
-    var locationData: MutableList<LatLng> = java.util.ArrayList()
+    var locationData: MutableList<LatLng> = ArrayList()
     private lateinit var mMap: GoogleMap
 
 
@@ -103,30 +102,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun getLastLocation() {
         fusedLocationClient.lastLocation
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful && task.result != null) {
                     val mLastLocation = task.result
 
                     var address = "No known address"
 
-                    val gcd = Geocoder(this, Locale.getDefault())
+                    /**
+                    // Geocoder, disabled to save requests
+                     val gcd = Geocoder(this, Locale.getDefault())
                     val addresses: List<Address>
                     try {
                         addresses = gcd.getFromLocation(mLastLocation!!.latitude, mLastLocation.longitude, 1)
                         locationData.add(LatLng(mLastLocation.latitude, mLastLocation.longitude))
                         if (addresses.isNotEmpty()) {
                             address = addresses[0].getAddressLine(0)
+
                         }
                     } catch (e: IOException) {
                         e.printStackTrace()
-                    }
-
+                    }*/
                     mMap.addMarker(
                         MarkerOptions()
                             .position(LatLng(mLastLocation!!.latitude, mLastLocation.longitude))
                             .title("Current Location")
                             .snippet(address)
+
                     )
+                    Log.d("DBG", "$mLastLocation.latitude")
 
                     val cameraPosition = CameraPosition.Builder()
                         .target(LatLng(mLastLocation.latitude, mLastLocation.longitude))
@@ -199,11 +202,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         getCurrentLocation()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        getLastLocation()
     }
 
     override fun onResume() {
