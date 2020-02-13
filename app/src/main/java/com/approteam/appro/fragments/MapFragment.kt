@@ -27,7 +27,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
     var mapInitialized = false
-    var currentLocation = LatLng(0.0, 0.0)
+    var currentLocation = LatLng(60.19,24.94)
 
 
     override fun onCreateView(
@@ -61,21 +61,14 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         /*val helsinki = LatLng(60.19,24.94)
         mMap.addMarker(MarkerOptions().position(helsinki).title("Helsinki"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(helsinki))*/
-        val snackB = Snackbar.make(
-            view!!.findViewById(R.id.map),
-            "Initializing map", 8000)
-
-        snackB.show()
-
+        btnCenter.isEnabled
         mapInitialized = true
     }
 
     override fun onLocationResults(lat: Double, lon: Double) {
         if (mapInitialized) {
             currentLocation = LatLng(lat, lon)
-            mMap.clear()
             mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
-            btnCenter.isEnabled
             Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
             Log.d("DBG", "$lat")
             Log.d("DBG", "$lon")
