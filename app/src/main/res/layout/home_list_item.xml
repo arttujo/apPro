@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    >
 
 <com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
+    android:layout_gravity="center_horizontal"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="?attr/selectableItemBackground"
     >
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="wrap_content">
-
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="175dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_height="150dp"
             android:id="@+id/cardImage"
            />
 
@@ -40,3 +47,4 @@
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
