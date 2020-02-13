@@ -2,22 +2,17 @@ package com.approteam.appro
 
 import android.Manifest
 import android.content.Context
-import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
 import com.approteam.appro.fragments.HomeFragment
 import com.approteam.appro.fragments.MapFragment
 import com.approteam.appro.fragments.ScanFragment
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.activity_main.*
 
 
