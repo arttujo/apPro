@@ -5,6 +5,7 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:orientation="vertical">
 
     <TextView
@@ -24,6 +25,7 @@
         android:id="@+id/approListRView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
+
         android:layout_height="500dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
