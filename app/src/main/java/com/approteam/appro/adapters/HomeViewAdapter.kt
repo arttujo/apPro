@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 
-data class sample(val name:String,val desc: String, val pic: Uri)
+data class Sample(val name:String,val desc: String, val pic: Uri)
 
 
-class HomeViewAdapter(val data: List<sample>,val ctx:Context, val listener: (sample)->Unit):RecyclerView.Adapter<HomeViewHolder>(){
+class HomeViewAdapter(val data: List<Sample>,val ctx:Context, val listener: (Sample)->Unit):RecyclerView.Adapter<HomeViewHolder>(){
 
     override fun getItemCount(): Int {
         return data.size
@@ -31,7 +31,7 @@ class HomeViewAdapter(val data: List<sample>,val ctx:Context, val listener: (sam
 
 class HomeViewHolder(view:View):RecyclerView.ViewHolder(view){
 
-    fun bind(ctx: Context,item:sample,listener: (sample) -> Unit) = with(itemView){
+    fun bind(ctx: Context,item:Sample,listener: (Sample) -> Unit) = with(itemView){
 
     }
 }
