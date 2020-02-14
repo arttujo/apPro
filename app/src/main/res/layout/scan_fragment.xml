@@ -11,23 +11,22 @@
         android:id="@+id/barCodeInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="177dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="176dp"
+        android:layout_marginTop="68dp"
         android:text="@string/scan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/scanImage" />
 
     <Button
+        android:id="@+id/scanButton"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:id="@+id/scanButton"
+        android:layout_marginBottom="48dp"
         android:text="Scan"
+        app:layout_constraintBottom_toBottomOf="@+id/scanImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="641dp" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/scanImage"
@@ -37,6 +36,8 @@
         android:contentDescription="@string/fit_image_to_scan"
         android:scaleType="fitCenter"
         android:src="@drawable/fit_to_scan"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-156dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
