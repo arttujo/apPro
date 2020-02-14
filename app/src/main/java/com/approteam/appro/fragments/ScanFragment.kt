@@ -48,19 +48,20 @@ class ScanFragment(ctx: Context) : Fragment() {
         barcodes = detector.detect(frame)
         Log.d("DBG", "$barcodes")
         thisCode = barcodes.valueAt(0)
+        val tV: TextView? = view.findViewById(R.id.barCodeInfo)
         btn?.setOnClickListener {
-
+            tV?.text = thisCode.rawValue
         }
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val tV: TextView? = view.findViewById(R.id.barCodeInfo)
+
         imageScanView = view.findViewById(R.id.scanImage)
         imageScanView.setImageBitmap(myBitmap)
         Log.d("DBG", "$thisCode")
-        tV?.text = thisCode.toString()
+
     }
 
 }
