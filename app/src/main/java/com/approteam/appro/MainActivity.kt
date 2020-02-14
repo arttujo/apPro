@@ -18,9 +18,7 @@ import com.approteam.appro.fragments.HomeFragment
 import com.approteam.appro.fragments.MapFragment
 import com.approteam.appro.fragments.ScanFragment
 import com.google.android.gms.location.*
-import com.google.zxing.Result
 import kotlinx.android.synthetic.main.activity_main.*
-import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 
 interface LocationListener{
@@ -55,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         permissionRequest()
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         supportFragmentManager.beginTransaction().add(R.id.container,homeFragment).commit()
         bottom_navigation.selectedItemId = R.id.navigation_home
