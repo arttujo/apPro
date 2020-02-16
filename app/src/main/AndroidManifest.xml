@@ -9,13 +9,14 @@
     -->
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-feature android:name="android.hardware.location.gps" /> <!-- Permission for location ! -->
-    <uses-feature android:name="android.hardware.camera"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.location.gps" /> <!-- Permission for location ! -->
+    <uses-feature android:name="android.hardware.camera"/>
 
     <application
         android:allowBackup="true"
@@ -27,6 +28,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode"/>
         <activity
             android:name=".fragments.MapFragment"
             android:label="@string/title_activity_maps"></activity>
