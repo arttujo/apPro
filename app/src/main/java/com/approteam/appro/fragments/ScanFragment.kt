@@ -1,8 +1,11 @@
 package com.approteam.appro.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import android.util.SparseArray
 import android.view.*
@@ -11,14 +14,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.approteam.appro.MainActivity
 import com.approteam.appro.R
+import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import org.w3c.dom.Text
-import java.util.jar.Manifest
-
 class ScanFragment(ctx: Context) : Fragment() {
 
     private lateinit var thisCode: Barcode
@@ -84,8 +86,12 @@ class ScanFragment(ctx: Context) : Fragment() {
             override fun release() {}
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
                 barCodes = detections!!.detectedItems
-                thisCode = barCodes.valueAt(1)
-                Log.d("Barcode", "${barCodes.valueAt(0)}")
+                val builder = StringBuilder()
+                if (barCodes.size() > 0) {
+                    val intent = Intent()
+                    intent.putExtra("barcode", barCodes.valueAt(0))
+                    onActivityResult(CommonStatusCodes.SUCCESS, 666, intent)
+                }
             }
 
         })
@@ -129,6 +135,20 @@ class ScanFragment(ctx: Context) : Fragment() {
             cameraEnabled = true
         } else {
             requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0) {
+            if (resultCode == 666) {
+                if (data != null) {
+                    val barcode = data.getParcelableExtra<Barcode>("barcode")
+                    tV.text = barcode?.displayValue
+                } else {
+                    tV.text = "No data"
+                }
+            }
         }
     }
 }
