@@ -1,38 +1,33 @@
 package com.approteam.appro.fragments
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.util.SparseArray
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.createBitmap
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.approteam.appro.MainActivity
 import com.approteam.appro.R
-import com.google.android.gms.vision.Frame
-import com.google.android.gms.vision.MultiDetector
+import com.google.android.gms.vision.CameraSource
+import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import java.io.File
+import java.util.jar.Manifest
 
 class ScanFragment(ctx: Context) : Fragment() {
 
     private lateinit var thisCode: Barcode
-    private lateinit var barcodes: SparseArray<Barcode>
     private lateinit var detector: BarcodeDetector
-    private lateinit var myBitmap: Bitmap
-    private lateinit var frame: Frame
-    private lateinit var imageScanView: ImageView
+    private lateinit var imageScanView: SurfaceView
+    private lateinit var camera: CameraSource
+    private lateinit var barCodes: SparseArray<Barcode>
+    var cameraEnabled = false
     private var c = ctx
+    private val CAMERA_REQUEST_CODE = 200
 
 
     override fun onCreateView(
@@ -41,30 +36,108 @@ class ScanFragment(ctx: Context) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.scan_fragment, container, false)
-        detector = BarcodeDetector.Builder(c).setBarcodeFormats(Barcode.ALL_FORMATS).build()
-        myBitmap = BitmapFactory.decodeResource(c.resources, R.drawable.qr_placeholder)
-        val btn = view?.findViewById<Button>(R.id.scanButton)
-        frame = Frame.Builder().setBitmap(myBitmap).build()
-        barcodes = detector.detect(frame)
-        Log.d("DBG", "$barcodes")
-        thisCode = barcodes.valueAt(0)
         val tV: TextView? = view.findViewById(R.id.barCodeInfo)
+        val btn = view?.findViewById<Button>(R.id.scanButton)
+        imageScanView = view.findViewById(R.id.scanImage)
         btn?.setOnClickListener {
+            Log.d("DBG", "$thisCode")
             tV?.text = thisCode.rawValue
         }
+        requestCamera()
+        detector = BarcodeDetector.Builder(c).setBarcodeFormats(Barcode.ALL_FORMATS).build()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (detector.isOperational) {
+            if (cameraEnabled) {
+                initScanner()
+            }
+        } else {
+            Log.d("DBG", "Imagescanner is not operational")
+        }
 
-        imageScanView = view.findViewById(R.id.scanImage)
-        imageScanView.setImageBitmap(myBitmap)
-        Log.d("DBG", "$thisCode")
 
     }
 
+    private fun initScanner() {
+        // Camera build parameters
+        camera = CameraSource.Builder(c, detector)
+            .setFacing(CameraSource.CAMERA_FACING_BACK)
+            .setRequestedFps(30f).setRequestedPreviewSize(1024, 768)
+            .setAutoFocusEnabled(true)
+            .build()
+        imageScanView.holder.addCallback(object : SurfaceHolder.Callback2 {
+            override fun surfaceRedrawNeeded(holder: SurfaceHolder?) {}
+
+            override fun surfaceChanged(
+                holder: SurfaceHolder?, format: Int, width: Int, height: Int
+            ) {
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                camera.stop()
+            }
+
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+                camera.start(holder)
+
+            }
+        })
+        detector.setProcessor(object : Detector.Processor<Barcode> {
+            override fun release() {}
+            override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
+                barCodes = detections!!.detectedItems
+                Log.d("DBG", "$barCodes")
+                thisCode = barCodes.valueAt(0)
+            }
+
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        camera.stop()
+        camera.release()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            handlePermissionResult(permissions, grantResults)
+            Log.d("DBG", "camera permission approved right now")
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    private fun handlePermissionResult(permissions: Array<out String>, grantResults: IntArray) {
+        val denied =
+            grantResults.indices.filter { grantResults[it] != PackageManager.PERMISSION_GRANTED }
+        if (denied.isEmpty()) {
+            cameraEnabled = true
+        } else {
+            Toast.makeText(c, "Camera permission denied", Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
+    private fun requestCamera() {
+        val permissionStatus =
+            ContextCompat.checkSelfPermission(c, android.Manifest.permission.CAMERA)
+        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+            cameraEnabled = true
+        } else {
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_REQUEST_CODE)
+        }
+    }
 }
+
 
 
 
