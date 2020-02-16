@@ -16,6 +16,7 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
+import org.w3c.dom.Text
 import java.util.jar.Manifest
 
 class ScanFragment(ctx: Context) : Fragment() {
@@ -25,6 +26,7 @@ class ScanFragment(ctx: Context) : Fragment() {
     private lateinit var imageScanView: SurfaceView
     private lateinit var camera: CameraSource
     private lateinit var barCodes: SparseArray<Barcode>
+    private lateinit var tV: TextView
     var cameraEnabled = false
     private var c = ctx
     private val CAMERA_REQUEST_CODE = 200
@@ -36,13 +38,8 @@ class ScanFragment(ctx: Context) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.scan_fragment, container, false)
-        val tV: TextView? = view.findViewById(R.id.barCodeInfo)
-        val btn = view?.findViewById<Button>(R.id.scanButton)
+        tV = view.findViewById(R.id.barCodeInfo)
         imageScanView = view.findViewById(R.id.scanImage)
-        btn?.setOnClickListener {
-            Log.d("DBG", "$thisCode")
-            tV?.text = thisCode.rawValue
-        }
         requestCamera()
         detector = BarcodeDetector.Builder(c).setBarcodeFormats(Barcode.ALL_FORMATS).build()
         return view
@@ -71,9 +68,7 @@ class ScanFragment(ctx: Context) : Fragment() {
         imageScanView.holder.addCallback(object : SurfaceHolder.Callback2 {
             override fun surfaceRedrawNeeded(holder: SurfaceHolder?) {}
 
-            override fun surfaceChanged(
-                holder: SurfaceHolder?, format: Int, width: Int, height: Int
-            ) {
+            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -89,8 +84,8 @@ class ScanFragment(ctx: Context) : Fragment() {
             override fun release() {}
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
                 barCodes = detections!!.detectedItems
-                Log.d("DBG", "$barCodes")
-                thisCode = barCodes.valueAt(0)
+                thisCode = barCodes.valueAt(1)
+                Log.d("Barcode", "${barCodes.valueAt(0)}")
             }
 
         })
