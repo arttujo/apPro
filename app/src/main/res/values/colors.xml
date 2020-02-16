@@ -6,5 +6,6 @@
     <color name="white">#FFFFFF</color>
     <color name="grey">#BEBEBE</color>
     <color name="black">#000000</color>
-
+    <color name="orange">#FF5722</color>
+    <color name="darkerOrange">#B12D00</color>
 </resources>

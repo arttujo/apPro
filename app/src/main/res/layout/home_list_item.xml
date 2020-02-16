@@ -21,6 +21,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="350dp"
+        android:elevation="20dp"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -32,17 +33,21 @@
            />
 
         <TextView
+            android:padding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="temporary"
             android:id="@+id/cardTitle"
-            android:textSize="30sp" />
+            android:textSize="25sp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="match_parent"
             android:id="@+id/cardDesc"
+            android:padding="8dp"
             android:layout_height="wrap_content"
             android:text="temporary"/>
+
 
 
     </LinearLayout>

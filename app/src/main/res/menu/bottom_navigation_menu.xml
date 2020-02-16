@@ -14,9 +14,17 @@
         />
 
     <item
+        android:id="@+id/naigation_stamps"
+        android:icon="@drawable/ic_grid"
+        android:title="@string/stamps"
+        />
+
+    <item
         android:id="@+id/navigation_scan"
         android:icon="@drawable/ic_camera"
         android:title="@string/scan"
         />
+
+
 
 </menu>

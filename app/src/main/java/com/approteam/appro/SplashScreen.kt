@@ -7,7 +7,7 @@ import android.os.Handler
 
 class SplashActivity : Activity() {
 
-    private val SPLASH_TIME_OUT:Long = 3000 // 1 sec
+    private val SPLASH_TIME_OUT:Long = 1500 // 1 sec
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

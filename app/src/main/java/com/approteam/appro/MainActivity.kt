@@ -3,24 +3,18 @@ package com.approteam.appro
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.LocationManager
-import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.approteam.appro.fragments.HomeFragment
 import com.approteam.appro.fragments.MapFragment
 import com.approteam.appro.fragments.ScanFragment
+import com.approteam.appro.fragments.StampsFragment
 import com.google.android.gms.location.*
-import com.google.zxing.Result
 import kotlinx.android.synthetic.main.activity_main.*
-import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 
 interface LocationListener{
@@ -37,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private val mapFragment = MapFragment(this)
     private val scanFragment = ScanFragment(this)
     private val homeFragment = HomeFragment(this)
+    private val stampsFragment = StampsFragment(this)
 
     //Location
     private val LOCATION_REQUEST_CODE = 101
@@ -86,6 +81,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_scan -> {
                     Log.d("DBG", "Scan Clicked")
                     supportFragmentManager.beginTransaction().replace(R.id.container,scanFragment).commit()
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.naigation_stamps -> {
+                    Log.d("DBG", "Stamps Selected")
+                    supportFragmentManager.beginTransaction().replace(R.id.container,stampsFragment).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
             }

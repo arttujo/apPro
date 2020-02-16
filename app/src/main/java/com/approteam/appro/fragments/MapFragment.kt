@@ -85,6 +85,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
                 Log.d("DBG", "$lon")
             } catch (e:Exception){
                 Log.d("DBG",e.toString())
+                Log.d("DBG", "Caused by navigating off from the view")
             }
 
         }
