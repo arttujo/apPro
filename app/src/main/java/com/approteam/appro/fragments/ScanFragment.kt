@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.approteam.appro.MainActivity
 import com.approteam.appro.R
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -54,14 +55,15 @@ class ScanFragment(ctx: Context) : Fragment() {
         tV = view.findViewById(R.id.scanTV)
         tV.text = getString(R.string.QR_search_text)
         imageScanView = view.findViewById(R.id.scanImage)
-        requestCamera()
         detector = BarcodeDetector.Builder(c).setBarcodeFormats(Barcode.ALL_FORMATS).build()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // QR-code detector operational -> enable camera
         if (detector.isOperational) {
+            requestCamera()
             if (cameraEnabled) {
                 initScanner()
             }
@@ -72,16 +74,18 @@ class ScanFragment(ctx: Context) : Fragment() {
 
     }
 
+    // Initialize QR-code scanner
     private fun initScanner() {
         // Camera build parameters
+        // context and detector, back camera, fps: 30, 1024*768 size, autofocus (needs permission in manifest)
         camera = CameraSource.Builder(c, detector)
             .setFacing(CameraSource.CAMERA_FACING_BACK)
             .setRequestedFps(30f).setRequestedPreviewSize(1024, 768)
             .setAutoFocusEnabled(true)
             .build()
+        // callbacks
         imageScanView.holder.addCallback(object : SurfaceHolder.Callback2 {
             override fun surfaceRedrawNeeded(holder: SurfaceHolder?) {}
-
             override fun surfaceChanged(
                 holder: SurfaceHolder?,
                 format: Int,
@@ -93,7 +97,7 @@ class ScanFragment(ctx: Context) : Fragment() {
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
                 camera.stop()
             }
-
+            // start camera and start blinking of scanTV (Scanning textview)
             override fun surfaceCreated(holder: SurfaceHolder?) {
                 camera.start(holder)
                 scanBlinkEffectEnable()
@@ -105,6 +109,7 @@ class ScanFragment(ctx: Context) : Fragment() {
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
                 barCodes = detections!!.detectedItems
                 val builder = StringBuilder()
+                // Returns value of barcode and is accessible with onActivityResult
                 if (barCodes.size() > 0) {
                     val intent = Intent()
                     intent.putExtra("barcode", barCodes.valueAt(0))
@@ -115,10 +120,17 @@ class ScanFragment(ctx: Context) : Fragment() {
         })
     }
 
+    // Camera destroy
     override fun onDestroy() {
         super.onDestroy()
-        camera.stop()
-        camera.release()
+        if (cameraEnabled) {
+            camera.stop()
+            camera.release()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        initScanner()
     }
 
     override fun onRequestPermissionsResult(
@@ -135,27 +147,30 @@ class ScanFragment(ctx: Context) : Fragment() {
         }
     }
 
+    // Handle camera permissions
     private fun handlePermissionResult(permissions: Array<out String>, grantResults: IntArray) {
         val denied =
             grantResults.indices.filter { grantResults[it] != PackageManager.PERMISSION_GRANTED }
         if (denied.isEmpty()) {
             cameraEnabled = true
+            activity?.supportFragmentManager?.beginTransaction()?.detach(this)?.attach(this)
+                ?.commit()
         } else {
-            Toast.makeText(c, "Camera permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(c, "Camera permission is needed for using this App!", Toast.LENGTH_LONG).show()
 
         }
     }
 
+    // Camera permissions
     private fun requestCamera() {
         val permissionStatus =
             ContextCompat.checkSelfPermission(c, android.Manifest.permission.CAMERA)
-        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
-            cameraEnabled = true
-        } else {
+        if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_REQUEST_CODE)
         }
     }
 
+    // Returns a value from QR-code (barcode)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0) {
@@ -171,6 +186,7 @@ class ScanFragment(ctx: Context) : Fragment() {
         }
     }
 
+    // Create a custom blinking text for scanTV (Scan textview)
     private fun scanBlinkEffectEnable() {
         blinkAnimation = ObjectAnimator.ofInt(tV, "textColor", Color.WHITE, Color.TRANSPARENT, Color.WHITE)
         blinkAnimation.duration = 1000
@@ -178,6 +194,7 @@ class ScanFragment(ctx: Context) : Fragment() {
         blinkAnimation.repeatMode = ObjectAnimator.REVERSE
         blinkAnimation.start()
     }
+    // Disable blinking of scanTV (Scan textview)
     private fun scanBlinkEffectDisable() {
         doAsync {
             uiThread {

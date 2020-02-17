@@ -6,6 +6,6 @@
     <string name="home">Home</string>
     <string name="stamps">Stamps</string>
     <string name="fit_image_to_scan">Qrcode camera surfaceview</string>
-    <string name="QR_search_text">Searching For QR-code</string>
+    <string name="QR_search_text">Point your device\'s camera on the QR-code</string>
     <string name="QR_code_found">Code Found</string>
 </resources>

@@ -7,6 +7,6 @@
     <string name="home">Koti</string>
     <string name="stamps">Leimat</string>
     <string name="fit_image_to_scan">Sovita skannataksesi</string>
-    <string name="QR_search_text">Etsitään QR-koodia</string>
+    <string name="QR_search_text">Osoita laitteesi kameralla QR-koodia</string>
     <string name="QR_code_found">QR-koodi löytyi</string>
 </resources>
