@@ -5,24 +5,35 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/barCodeInfo"
+        android:id="@+id/scanTV"
         android:layout_width="367dp"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="615dp"
+        android:gravity="center_horizontal"
         android:text="@string/scan"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="24dp" />
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/scanImage"
+        app:layout_constraintEnd_toEndOf="@+id/scanImage"
+        app:layout_constraintStart_toStartOf="@+id/scanImage"
+        app:layout_constraintTop_toTopOf="@+id/scanImage" />
 
     <SurfaceView
         android:id="@+id/scanImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="60dp"
         android:contentDescription="@string/fit_image_to_scan"
         android:scaleType="fitCenter"
         android:src="@drawable/fit_to_scan"
