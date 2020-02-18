@@ -13,7 +13,7 @@
         android:layout_width="367dp"
         android:layout_height="24dp"
         android:layout_marginStart="22dp"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="22dp"
         android:layout_marginBottom="615dp"
         android:gravity="center_horizontal"
