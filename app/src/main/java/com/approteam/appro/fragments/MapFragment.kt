@@ -39,9 +39,9 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     ): View? {
             val view = inflater.inflate(R.layout.map_fragment, container, false)
             // Floating button for centering to user location
-            val centerBtn = view.findViewById<FloatingActionButton>(R.id.btnCenter)
             // Disable center button until first location is updated
-            centerBtn.isEnabled = false
+            // Google maps api already implements this
+            /*centerBtn.isEnabled = false
             centerBtn.setOnClickListener {
                 // Center map to current location and zoom it
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
@@ -49,7 +49,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
                 Toast.makeText(this.context, "Centered to your location", Toast.LENGTH_SHORT)
                     .show()
                 Log.d("DBG", "Map centered")
-            }
+            }*/
 
             mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment?.getMapAsync(this)
@@ -64,6 +64,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.isMyLocationEnabled = true
         val zoomLevel: Float = 10.toFloat()
         // Zoom in map a bit
         mMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel))
@@ -79,8 +80,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         if (mapInitialized) {
             try {
                 currentLocation = LatLng(lat, lon)
-                btnCenter.isEnabled = true
-                mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
+                //mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
                 Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
                 Log.d("DBG", "$lat")
                 Log.d("DBG", "$lon")
@@ -91,6 +91,10 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
 
         }
 
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 }
 
