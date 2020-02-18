@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="?attr/selectableItemBackground"
     >
 
 <com.google.android.material.card.MaterialCardView
@@ -13,9 +16,7 @@
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layout_gravity="center_horizontal"
-    android:focusable="true"
-    android:clickable="true"
-    android:background="?attr/selectableItemBackground"
+
     >
 
     <LinearLayout
