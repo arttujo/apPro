@@ -61,8 +61,11 @@ class HomeViewAdapter(private val data: MutableList<Sample>, private val ctx: Co
         return data.size
     }
 
-    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) =
-        holder.bind(ctx, data[position], listener)
+    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
+        holder.bind(ctx,position,data[position], listener)
+
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         return HomeViewHolder(
@@ -77,12 +80,14 @@ class HomeViewAdapter(private val data: MutableList<Sample>, private val ctx: Co
 
 //View holder for the recycler view card items
 class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
     private val picasso = Picasso.get()
-    fun bind(ctx: Context, item: Sample, listener: (Sample) -> Unit) = with(itemView) {
+
+    fun bind(ctx: Context,pos:Int ,item: Sample, listener: (Sample) -> Unit) = with(itemView) {
+
         cardTitle.text = item.name
         cardDesc.text = item.desc
         picasso.load(item.pic).into(cardImage)
         setOnClickListener { listener(item) }
+        cardImage.transitionName = item.name
     }
 }

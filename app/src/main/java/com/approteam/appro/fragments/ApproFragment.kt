@@ -3,7 +3,9 @@ package com.approteam.appro.fragments
 import android.content.Context
 import android.content.Intent
 import android.media.Image
+import android.os.Build
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
 import com.google.android.gms.vision.barcode.Barcode
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.appro_fragment.*
 import kotlinx.android.synthetic.main.home_list_item.view.*
 
 class ApproFragment(ctx: Context) : Fragment() {
@@ -34,13 +37,25 @@ class ApproFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val aName = view.findViewById<TextView>(R.id.cardTitle)
-        val aImage = view.findViewById<ImageView>(R.id.cardImage)
-        val aDesc = view.findViewById<TextView>(R.id.cardDesc)
+        val aName = view.findViewById<TextView>(R.id.cardTitleAp)
+        val aImage = view.findViewById<ImageView>(R.id.cardImageAp)
+        val aDesc = view.findViewById<TextView>(R.id.cardDescAp)
+        val transName = arguments?.getString("approName")
+        aImage.transitionName = transName
         aName.text = arguments?.getString("approName")
         val imageItem = arguments?.getString("approPic")
         picasso.load(imageItem).into(aImage)
         aDesc?.text = arguments?.getString("approDesc")
+
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            sharedElementEnterTransition = TransitionInflater.from(c).inflateTransition(android.R.transition.slide_top)
+            Log.d("DBG","Transition")
+        }
 
     }
 }

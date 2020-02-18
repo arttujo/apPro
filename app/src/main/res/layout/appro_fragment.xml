@@ -6,21 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="ApproFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <ImageView
-        android:id="@+id/cardImage"
+        android:id="@+id/cardImageAp"
         android:layout_width="411dp"
         android:layout_height="189dp"
         android:layout_marginBottom="60dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/cardTitle"
+        app:layout_constraintBottom_toTopOf="@+id/cardTitleAp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp"
+
+        />
 
     <TextView
-        android:id="@+id/cardTitle"
+        android:id="@+id/cardTitleAp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
@@ -29,18 +32,25 @@
         android:text="temporary"
         android:textColor="@color/black"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/cardDesc"
-        app:layout_constraintTop_toBottomOf="@+id/cardImage"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cardDescAp"
+        app:layout_constraintTop_toBottomOf="@+id/cardImageAp"
+        tools:layout_editor_absoluteX="0dp"
+
+
+        />
 
     <TextView
-        android:id="@+id/cardDesc"
+        android:id="@+id/cardDescAp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="temporary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/cardTitleAp"
+
+
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
