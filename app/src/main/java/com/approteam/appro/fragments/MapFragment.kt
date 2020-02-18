@@ -29,7 +29,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
     var mapInitialized = false
-    var currentLocation = LatLng(60.19,24.94)
+    var currentLocation = LatLng(60.19, 24.94)
 
 
     override fun onCreateView(
@@ -37,30 +37,31 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.map_fragment, container, false)
-        // Floating button for centering to user location
-        val centerBtn = view.findViewById<FloatingActionButton>(R.id.btnCenter)
-        // Disable center button until first location is updated
-        centerBtn.isEnabled = false
-        centerBtn.setOnClickListener {
-            // Center map to current location and zoom it
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(15.toFloat()))
-            Toast.makeText(this.context, "Centered to your location", Toast.LENGTH_SHORT)
-                .show()
-            Log.d("DBG", "Map centered")
-        }
+            val view = inflater.inflate(R.layout.map_fragment, container, false)
+            // Floating button for centering to user location
+            val centerBtn = view.findViewById<FloatingActionButton>(R.id.btnCenter)
+            // Disable center button until first location is updated
+            centerBtn.isEnabled = false
+            centerBtn.setOnClickListener {
+                // Center map to current location and zoom it
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(15.toFloat()))
+                Toast.makeText(this.context, "Centered to your location", Toast.LENGTH_SHORT)
+                    .show()
+                Log.d("DBG", "Map centered")
+            }
 
-        mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
-        return view
+            mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+            mapFragment?.getMapAsync(this)
+            return view
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fusedLocationClient = FusedLocationProviderClient(c)
         super.onViewCreated(view, savedInstanceState)
-    }
+        fusedLocationClient = FusedLocationProviderClient(c)
 
+    }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val zoomLevel: Float = 10.toFloat()
@@ -83,15 +84,14 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
                 Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
                 Log.d("DBG", "$lat")
                 Log.d("DBG", "$lon")
-            } catch (e:Exception){
-                Log.d("DBG",e.toString())
+            } catch (e: Exception) {
+                Log.d("DBG", e.toString())
                 Log.d("DBG", "Caused by navigating off from the view")
             }
 
         }
 
     }
-
 }
 
 

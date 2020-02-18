@@ -16,11 +16,8 @@ import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeFragment(ctx: Context): Fragment(){
 
-
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.home_fragment,container,false)
+     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.home_fragment,container,false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,5 +27,4 @@ class HomeFragment(ctx: Context): Fragment(){
             Log.d("DBG","Clicked recycler item")
         }
     }
-
 }
