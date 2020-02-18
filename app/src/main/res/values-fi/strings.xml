@@ -5,6 +5,7 @@
     <string name="map">Kartta</string>
     <string name="scan">Skannaus</string>
     <string name="home">Koti</string>
+    <string name="appro">Appro</string>
     <string name="stamps">Leimat</string>
     <string name="fit_image_to_scan">Sovita skannataksesi</string>
     <string name="QR_search_text">Osoita laitteesi kameralla QR-koodia</string>

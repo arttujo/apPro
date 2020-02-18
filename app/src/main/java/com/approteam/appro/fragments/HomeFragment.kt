@@ -12,19 +12,29 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.approteam.appro.*
+import kotlinx.android.synthetic.main.appro_fragment.*
 import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeFragment(ctx: Context): Fragment(){
 
-     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val c = ctx
+
+    private val approFragment = ApproFragment(c)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.home_fragment,container,false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         approListRView.layoutManager = LinearLayoutManager(context)
         super.onViewCreated(view, savedInstanceState)
-        approListRView.adapter = HomeViewAdapter(testdata.hometestdata,context!!){
-            Log.d("DBG","Clicked recycler item")
+        approListRView.adapter = HomeViewAdapter(Testdata.homeTestData,c){
+            approItemClicked(it)
         }
+
     }
+    private fun approItemClicked(item: Sample) {
+        Log.d("DBG", "Clicked $item")
+    }
+
 }

@@ -9,10 +9,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.approteam.appro.fragments.HomeFragment
-import com.approteam.appro.fragments.MapFragment
-import com.approteam.appro.fragments.ScanFragment
-import com.approteam.appro.fragments.StampsFragment
+import com.approteam.appro.fragments.*
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -59,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavListener()
 
     }
-
 
     //creates a listener for the bottom navigation buttons
     private fun bottomNavListener() {

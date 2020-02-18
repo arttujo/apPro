@@ -92,10 +92,6 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         }
 
     }
-
-    override fun onStop() {
-        super.onStop()
-    }
 }
 
 
