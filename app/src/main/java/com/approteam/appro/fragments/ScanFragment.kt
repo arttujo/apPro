@@ -108,7 +108,6 @@ class ScanFragment(ctx: Context) : Fragment() {
             override fun release() {}
             override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
                 barCodes = detections!!.detectedItems
-                val builder = StringBuilder()
                 // Returns value of barcode and is accessible with onActivityResult
                 if (barCodes.size() > 0) {
                     val intent = Intent()
