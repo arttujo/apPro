@@ -5,6 +5,7 @@ import android.content.Context
 import android.drm.DrmStore
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
             val bars = Gson().fromJson(json,Array<Bar>::class.java).toList()
             uiThread {
                 createApproRec.adapter = CreateApproAdapter(bars,c)
+                Log.d("DBG",bars.toString())
             }
         }
         super.onViewCreated(view, savedInstanceState)

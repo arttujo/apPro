@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.approteam.appro.Appro
 import com.approteam.appro.R
-import com.approteam.appro.Sample
+
 import kotlinx.android.synthetic.main.stamps_list_item.view.*
 
 
-class StampsViewAdapter(val data: MutableList<Sample>,val ctx: Context, val listener: (Sample)-> Unit):RecyclerView.Adapter<StampsViewHolder>(){
+class StampsViewAdapter(val data: MutableList<Appro.ApproBar>, val ctx: Context, val listener: (Appro.ApproBar)-> Unit):RecyclerView.Adapter<StampsViewHolder>(){
 
     override fun getItemCount(): Int {
         return data.size
@@ -29,7 +30,7 @@ class StampsViewAdapter(val data: MutableList<Sample>,val ctx: Context, val list
 
 
 class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
-    fun bind(ctx: Context,item:Sample,listener: (Sample) -> Unit)= with(itemView){
+    fun bind(ctx: Context,item:Appro.ApproBar,listener: (Appro.ApproBar) -> Unit)= with(itemView){
         gridItemName.text = item.name
         setOnClickListener { listener(item) }
 

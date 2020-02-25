@@ -1,13 +1,8 @@
 package com.approteam.appro.fragments
 
-import android.app.ActionBar
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.transition.Slide
-import android.transition.TransitionInflater
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +10,12 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
-import com.google.android.gms.common.api.CommonStatusCodes
-import kotlinx.android.synthetic.main.appro_fragment.*
+import com.github.kittinunf.fuel.Fuel
+import com.google.gson.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.home_list_item.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 
 class HomeFragment(ctx: Context) : Fragment() {
@@ -37,29 +34,38 @@ class HomeFragment(ctx: Context) : Fragment() {
         btn.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, createApproFragment)?.commit()
         }
-
         return view
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        approListRView.layoutManager = LinearLayoutManager(context)
-        super.onViewCreated(view, savedInstanceState)
-        approListRView.adapter = HomeViewAdapter(Testdata.homeTestData, c){
-            val bundle = Bundle()
-            bundle.putString("approName", it.name)
-            bundle.putString("approDesc", it.desc)
-            bundle.putString("approPic", it.pic)
-            approFragment.arguments = bundle
-            activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name)?.addToBackStack(null)
-                ?.replace(R.id.container, approFragment)?.commit()
-
-
+        doAsync {
+            Fuel.get("http://foxer153.asuscomm.com:3001/appro")
+                .response { request, response, result ->
+                    val (bytes,error) = result
+                    if(bytes!=null){
+                        Log.d("DBG", "Bytes received!")
+                        Log.d("DBG", String(bytes))
+                        val json = bytes.toString(Charsets.UTF_8)
+                        val appros = Gson().fromJson(json,Array<Appro>::class.java).toList()
+                        uiThread {
+                            Log.d("DBG",appros.toString())
+                            Log.d("DBG", "UI THREAD")
+                            approListRView.adapter = HomeViewAdapter(appros, c){
+                                val bundle = Bundle()
+                                bundle.putString("approName", it.name)
+                                bundle.putString("approDesc", it.description)
+                                bundle.putString("approPic", it.image)
+                                approFragment.arguments = bundle
+                                activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name!!)?.addToBackStack(null)
+                                    ?.replace(R.id.container, approFragment)?.commit()
+                            }
+                        }
+                    }
+                }
         }
 
-
-
+        approListRView.layoutManager = LinearLayoutManager(context)
+        super.onViewCreated(view, savedInstanceState)
     }
 
 }

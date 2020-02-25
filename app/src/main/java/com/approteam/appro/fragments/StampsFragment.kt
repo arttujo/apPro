@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.HomeViewAdapter
 import com.approteam.appro.R
 import com.approteam.appro.adapters.StampsViewAdapter
-import com.approteam.appro.Testdata
+
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.stamps_fragment.*
 
@@ -27,10 +27,13 @@ class StampsFragment(ctx: Context):Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stamps_grid_view.layoutManager = GridLayoutManager(c,2)
         super.onViewCreated(view, savedInstanceState)
+
+        /*
         stamps_grid_view.adapter = StampsViewAdapter(Testdata.homeTestData,c){
             Log.d("DBG", "Grid item $it Clicked!")
         }
 
+         */
     }
 
 
