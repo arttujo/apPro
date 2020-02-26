@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".MainActivity">
+
+    <fragment
+        android:id="@+id/barMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="415dp"
+        android:layout_height="407dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/barMapView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </fragment>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/barListRV"
+        android:layout_width="331dp"
+        android:layout_height="297dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="38dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barMap" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

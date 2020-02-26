@@ -7,17 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.approteam.appro.Appro
 import com.approteam.appro.LocationListener
 import com.approteam.appro.R
+import com.approteam.appro.adapters.ApproBarAdapter
+import com.github.kittinunf.fuel.Fuel
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.bar_list_fragment.*
+import kotlinx.android.synthetic.main.home_fragment.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.lang.Exception
 
-class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListener {
+class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListener {
 
     private var mapFragment: SupportMapFragment? = null
     private var c = ctx
@@ -32,34 +41,40 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-            val view = inflater.inflate(R.layout.map_fragment, container, false)
-            // Floating button for centering to user location
-            // Disable center button until first location is updated
-            // Google maps api already implements this
-            /*centerBtn.isEnabled = false
-            centerBtn.setOnClickListener {
-                // Center map to current location and zoom it
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(15.toFloat()))
-                Toast.makeText(this.context, "Centered to your location", Toast.LENGTH_SHORT)
-                    .show()
-                Log.d("DBG", "Map centered")
-            }*/
-
-            mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-            mapFragment?.getMapAsync(this)
-            return view
+        val view = inflater.inflate(R.layout.bar_list_fragment, container, false)
+        mapFragment = childFragmentManager.findFragmentById(R.id.barMap) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+        return view
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        barListRV.layoutManager = LinearLayoutManager(c)
         fusedLocationClient = FusedLocationProviderClient(c)
+        doAsync {
+            Fuel.get("http://foxer153.asuscomm.com:3001/appro")
+                .response { _, _, result ->
+                    val (bytes, error) = result
+                    if (bytes != null) {
+                        Log.d("DBG", "Bytes received!")
+                        Log.d("DBG", String(bytes))
+                        val json = bytes.toString(Charsets.UTF_8)
+                        val appro = Gson().fromJson(json, Array<Appro.ApproBar>::class.java).toList()
+                        uiThread {
+                            Log.d("DBG", "UI THREAD")
+                            barListRV.adapter = ApproBarAdapter(appro, c)
+                        }
+                    }
+                }
+        }
 
     }
+
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.isMyLocationEnabled = true
+        mMap.isMyLocationEnabled = false
         val zoomLevel: Float = 10.toFloat()
         // Zoom in map a bit
         mMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel))
@@ -88,6 +103,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
 
     }
 }
+
 
 
 

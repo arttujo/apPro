@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -17,13 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
 import com.google.android.gms.vision.barcode.Barcode
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.appro_fragment.*
-import kotlinx.android.synthetic.main.home_list_item.view.*
 
 class ApproFragment(ctx: Context) : Fragment() {
 
     private val c = ctx
     private val picasso = Picasso.get()
+    private val barListFragment = BarListFragment(c)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +46,10 @@ class ApproFragment(ctx: Context) : Fragment() {
         val imageItem = arguments?.getString("approPic")
         picasso.load(imageItem).into(aImage)
         aDesc?.text = arguments?.getString("approDesc")
+        val btn = view.findViewById<Button>(R.id.btnShowBars)
+        btn.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
+        }
 
     }
 
