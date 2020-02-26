@@ -41,7 +41,7 @@ class HomeFragment(ctx: Context) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         doAsync {
             Fuel.get("http://foxer153.asuscomm.com:3001/appro")
-                .response { request, response, result ->
+                .response { _, _, result ->
                     val (bytes,error) = result
                     if(bytes!=null){
                         Log.d("DBG", "Bytes received!")
@@ -51,15 +51,7 @@ class HomeFragment(ctx: Context) : Fragment() {
                             Log.d("DBG",appros.toString())
                             Log.d("DBG", "UI THREAD")
                             homeProgressBar.visibility = View.GONE
-                            approListRView.adapter = HomeViewAdapter(appros, c){
-                                val bundle = Bundle()
-                                bundle.putString("approName", it.name)
-                                bundle.putString("approDesc", it.description)
-                                bundle.putString("approPic", it.image)
-                                approFragment.arguments = bundle
-                                activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name!!)?.addToBackStack(null)
-                                    ?.replace(R.id.container, approFragment)?.commit()
-                            }
+                            approClick(appros)
                         }
                     }
                 }
@@ -68,5 +60,18 @@ class HomeFragment(ctx: Context) : Fragment() {
         approListRView.layoutManager = LinearLayoutManager(context)
         super.onViewCreated(view, savedInstanceState)
     }
+    //Click handler for opening an appro
+    fun approClick(appros: List<Appro>){
+        approListRView.adapter = HomeViewAdapter(appros, c){
+            val bundle = Bundle()
+            bundle.putString("approName", it.name)
+            bundle.putString("approDesc", it.description)
+            bundle.putString("approPic", it.image)
+            approFragment.arguments = bundle
+            activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name!!)?.addToBackStack(null)
+                ?.replace(R.id.container, approFragment)?.commit()
+        }
+    }
+
 
 }
