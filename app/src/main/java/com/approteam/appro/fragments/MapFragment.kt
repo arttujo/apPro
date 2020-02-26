@@ -55,6 +55,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationClient = FusedLocationProviderClient(c)
+        getCurrentApproData(c)
 
     }
     override fun onMapReady(googleMap: GoogleMap) {
@@ -83,9 +84,14 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
                 Log.d("DBG", e.toString())
                 Log.d("DBG", "Caused by navigating off from the view")
             }
-
         }
+    }
 
+    private fun getCurrentApproData(ctx: Context):String{
+        val mPrefs = ctx.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
+        val approJsonString = mPrefs.getString(PREF_APPRO,null)
+        Log.d("DBG", "GOT APPRO: $approJsonString")
+        return approJsonString!!
     }
 }
 
