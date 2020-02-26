@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
+import com.approteam.appro.data_models.Appro
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.*
 import kotlinx.android.synthetic.main.home_fragment.*
@@ -45,11 +46,11 @@ class HomeFragment(ctx: Context) : Fragment() {
                     if(bytes!=null){
                         Log.d("DBG", "Bytes received!")
                         Log.d("DBG", String(bytes))
-                        val json = bytes.toString(Charsets.UTF_8)
-                        val appros = Gson().fromJson(json,Array<Appro>::class.java).toList()
+                        val appros = Gson().fromJson(String(bytes),Array<Appro>::class.java).toList()
                         uiThread {
                             Log.d("DBG",appros.toString())
                             Log.d("DBG", "UI THREAD")
+                            homeProgressBar.visibility = View.GONE
                             approListRView.adapter = HomeViewAdapter(appros, c){
                                 val bundle = Bundle()
                                 bundle.putString("approName", it.name)

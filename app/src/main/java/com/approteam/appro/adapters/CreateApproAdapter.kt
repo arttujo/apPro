@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.approteam.appro.Bar
+import com.approteam.appro.data_models.Bar
 import com.approteam.appro.R
 import kotlinx.android.synthetic.main.bar_list_item.view.*
 
-class CreateApproAdapter(private val data: List<Bar>,private val ctx: Context): RecyclerView.Adapter<CreateApproViewHolder>(){
+class CreateApproAdapter(private val data: List<Bar>, private val ctx: Context): RecyclerView.Adapter<CreateApproViewHolder>(){
 
     override fun getItemCount(): Int {
         return data.size
