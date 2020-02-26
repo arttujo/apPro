@@ -33,7 +33,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
     private lateinit var bars: List<Appro.ApproBar>
     private lateinit var coords: MutableList<LatLng>
     var mapInitialized = false
-    private lateinit var averageLocation: LatLng
+
 
 
     override fun onCreateView(
@@ -96,9 +96,9 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         val lonAvg = lonSum / coords.size.toDouble()
         Log.d("DBG latavg", latAvg.toString())
         Log.d("DBG lonavg", lonAvg.toString())
-        averageLocation = LatLng(latAvg, lonAvg)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(averageLocation))
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(10.toFloat()))
+        var averageLocation = LatLng(latAvg, lonAvg)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(averageLocation,13.toFloat()))
+
         Log.d("DBG", "Centered map to average location {$averageLocation}")
     }
 }
