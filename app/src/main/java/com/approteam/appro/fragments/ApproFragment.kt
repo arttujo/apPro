@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
 import com.google.android.gms.vision.barcode.Barcode
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.appro_fragment.*
 
 class ApproFragment(ctx: Context) : Fragment() {
 
@@ -37,22 +38,25 @@ class ApproFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val aName = view.findViewById<TextView>(R.id.cardTitleAp)
-        val aImage = view.findViewById<ImageView>(R.id.cardImageAp)
-        val aDesc = view.findViewById<TextView>(R.id.cardDescAp)
         val transName = arguments?.getString("approName")
-        aImage.transitionName = transName
-        aName.text = arguments?.getString("approName")
+        cardImageAp.transitionName = transName
+        cardTitleAp.text = arguments?.getString("approName")
         val imageItem = arguments?.getString("approPic")
-        picasso.load(imageItem).into(aImage)
-        aDesc?.text = arguments?.getString("approDesc")
-        val btn = view.findViewById<Button>(R.id.btnShowBars)
-        btn.setOnClickListener {
+        cardDescAp.text = arguments?.getString("approDesc")
+        picasso.load(imageItem).into(cardImageAp)
+        setupBundle()
+        btnShowBars.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
         }
 
     }
 
+    fun setupBundle(){
+        val approJsonString = arguments?.getString("approJson")
+        val bundle = Bundle()
+        bundle.putString("approJson",approJsonString)
+        barListFragment.arguments = bundle
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

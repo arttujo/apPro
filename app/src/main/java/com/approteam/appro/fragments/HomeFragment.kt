@@ -51,7 +51,7 @@ class HomeFragment(ctx: Context) : Fragment() {
                             Log.d("DBG",appros.toString())
                             Log.d("DBG", "UI THREAD")
                             homeProgressBar.visibility = View.GONE
-                            approClick(appros)
+                            approClick(appros, String(bytes))
                         }
                     }
                 }
@@ -61,12 +61,13 @@ class HomeFragment(ctx: Context) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
     //Click handler for opening an appro
-    fun approClick(appros: List<Appro>){
+    fun approClick(appros: List<Appro>,approJson: String){
         approListRView.adapter = HomeViewAdapter(appros, c){
             val bundle = Bundle()
             bundle.putString("approName", it.name)
             bundle.putString("approDesc", it.description)
             bundle.putString("approPic", it.image)
+            bundle.putString("approJson", approJson)
             approFragment.arguments = bundle
             activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name!!)?.addToBackStack(null)
                 ?.replace(R.id.container, approFragment)?.commit()
