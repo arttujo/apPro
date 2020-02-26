@@ -1,8 +1,6 @@
 package com.approteam.appro.fragments
 
-import android.app.ActionBar
 import android.content.Context
-import android.drm.DrmStore
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.approteam.appro.Bar
+import com.approteam.appro.data_models.Bar
 import com.approteam.appro.R
 import com.approteam.appro.adapters.CreateApproAdapter
 import com.google.gson.Gson
@@ -46,6 +44,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
             val json = URL("http://Foxer153.asuscomm.com:3001/all").readText()
             val bars = Gson().fromJson(json,Array<Bar>::class.java).toList()
             uiThread {
+                createApproProgressBar.visibility = View.GONE
                 createApproRec.adapter = CreateApproAdapter(bars,c)
                 Log.d("DBG",bars.toString())
             }

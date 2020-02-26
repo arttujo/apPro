@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.approteam.appro.Appro
+import com.approteam.appro.data_models.Appro
 import com.approteam.appro.R
 
 import kotlinx.android.synthetic.main.stamps_list_item.view.*
@@ -30,7 +30,7 @@ class StampsViewAdapter(val data: MutableList<Appro.ApproBar>, val ctx: Context,
 
 
 class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
-    fun bind(ctx: Context,item:Appro.ApproBar,listener: (Appro.ApproBar) -> Unit)= with(itemView){
+    fun bind(ctx: Context, item: Appro.ApproBar, listener: (Appro.ApproBar) -> Unit)= with(itemView){
         gridItemName.text = item.name
         setOnClickListener { listener(item) }
 

@@ -1,4 +1,4 @@
-package com.approteam.appro
+package com.approteam.appro.data_models
 
 import com.google.gson.annotations.Expose
 

@@ -1,13 +1,11 @@
 package com.approteam.appro
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.approteam.appro.data_models.Appro
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_list_item.view.*
 
@@ -40,7 +38,7 @@ class HomeViewAdapter(private val data: List<Appro>, private val ctx: Context, p
 class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val picasso = Picasso.get()
 
-    fun bind(ctx: Context,pos:Int ,item: Appro, listener: (Appro) -> Unit) = with(itemView) {
+    fun bind(ctx: Context, pos:Int, item: Appro, listener: (Appro) -> Unit) = with(itemView) {
 
         cardTitle.text = item.name
         cardDesc.text = item.description
