@@ -71,6 +71,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         mapInitialized = true
     }
 
+
     override fun onLocationResults(lat: Double, lon: Double) {
         // Wait for map to initialize before updating locations
         if (mapInitialized) {
@@ -93,6 +94,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         Log.d("DBG", "GOT APPRO: $approJsonString")
         return approJsonString!!
     }
+
 }
 
 
