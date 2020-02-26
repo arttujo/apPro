@@ -15,6 +15,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.google.gson.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.home_list_item.*
+import kotlinx.android.synthetic.main.home_list_item.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -64,10 +65,11 @@ class HomeFragment(ctx: Context) : Fragment() {
     fun approClick(appros: List<Appro>,approJson: String){
         approListRView.adapter = HomeViewAdapter(appros, c){
             val bundle = Bundle()
+            val approString = Gson().toJson(it)
             bundle.putString("approName", it.name)
             bundle.putString("approDesc", it.description)
             bundle.putString("approPic", it.image)
-            bundle.putString("approJson", approJson)
+            bundle.putString("approJson", approString)
             approFragment.arguments = bundle
             activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name!!)?.addToBackStack(null)
                 ?.replace(R.id.container, approFragment)?.commit()

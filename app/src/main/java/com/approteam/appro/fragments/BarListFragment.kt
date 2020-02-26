@@ -45,8 +45,8 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         mapFragment = childFragmentManager.findFragmentById(R.id.barMap) as SupportMapFragment?
         val json = arguments?.getString("approJson")
         Log.d("DBG", "JSON IN BARLIST: $json")
-        val selectedAppro = Gson().fromJson(json, Array<Appro>::class.java).toList()
-        bars = selectedAppro[0].bars!!
+        val selectedAppro = Gson().fromJson(json, Appro::class.java)
+        bars = selectedAppro.bars!!
         coords = mutableListOf()
         for (item in bars) {
             coords.add(LatLng(item.latitude!!, item.longitude!!))

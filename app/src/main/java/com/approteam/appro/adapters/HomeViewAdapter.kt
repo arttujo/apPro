@@ -21,6 +21,10 @@ class HomeViewAdapter(private val data: List<Appro>, private val ctx: Context, p
         holder.bind(ctx,position,data[position], listener)
 
     }
+    fun test() {
+
+    }
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
@@ -39,7 +43,6 @@ class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val picasso = Picasso.get()
 
     fun bind(ctx: Context, pos:Int, item: Appro, listener: (Appro) -> Unit) = with(itemView) {
-
         cardTitle.text = item.name
         cardDesc.text = item.description
         picasso.load(item.image).into(cardImage)

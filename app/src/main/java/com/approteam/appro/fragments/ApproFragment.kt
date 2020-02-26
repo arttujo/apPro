@@ -52,6 +52,9 @@ class ApproFragment(ctx: Context) : Fragment() {
         cardDescAp.text = arguments?.getString("approDesc")
         picasso.load(imageItem).into(cardImageAp)
         setupBundle()
+        val json = arguments?.getString("approJson")
+        Log.d("DBG","received: "+json)
+
         btnShowBars.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
         }
