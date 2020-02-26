@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.approteam.appro.Appro
 import com.approteam.appro.LocationListener
 import com.approteam.appro.R
 import com.approteam.appro.adapters.ApproBarAdapter
+import com.approteam.appro.data_models.Appro
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
