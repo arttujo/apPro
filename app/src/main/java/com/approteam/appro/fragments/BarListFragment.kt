@@ -52,22 +52,11 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         super.onViewCreated(view, savedInstanceState)
         barListRV.layoutManager = LinearLayoutManager(c)
         fusedLocationClient = FusedLocationProviderClient(c)
-        doAsync {
-            Fuel.get("http://foxer153.asuscomm.com:3001/appro")
-                .response { _, _, result ->
-                    val (bytes, error) = result
-                    if (bytes != null) {
-                        Log.d("DBG", "Bytes received!")
-                        Log.d("DBG", String(bytes))
-                        val json = bytes.toString(Charsets.UTF_8)
-                        val appro = Gson().fromJson(json, Array<Appro.ApproBar>::class.java).toList()
-                        uiThread {
-                            Log.d("DBG", "UI THREAD")
-                            barListRV.adapter = ApproBarAdapter(appro, c)
-                        }
-                    }
-                }
-        }
+        val json = arguments?.getString("approJson")
+        Log.d("DBG","JSON IN BARLIST: $json")
+        val selectedAppro = Gson().fromJson(json,Array<Appro>::class.java).toList()
+        val bars = selectedAppro[0].bars!!
+        barListRV.adapter = ApproBarAdapter(bars,c)
 
     }
 
