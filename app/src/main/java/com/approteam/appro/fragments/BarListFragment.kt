@@ -12,7 +12,6 @@ import com.approteam.appro.LocationListener
 import com.approteam.appro.R
 import com.approteam.appro.adapters.ApproBarAdapter
 import com.approteam.appro.data_models.Appro
-import com.github.kittinunf.fuel.Fuel
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -21,7 +20,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.bar_list_fragment.*
-import kotlinx.android.synthetic.main.home_fragment.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.Exception
@@ -32,8 +30,10 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
     private var c = ctx
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
+    private lateinit var bars: List<Appro.ApproBar>
+    private lateinit var coords: MutableList<LatLng>
     var mapInitialized = false
-    var currentLocation = LatLng(60.19, 24.94)
+    private lateinit var averageLocation: LatLng
 
 
     override fun onCreateView(
@@ -43,55 +43,67 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
     ): View? {
         val view = inflater.inflate(R.layout.bar_list_fragment, container, false)
         mapFragment = childFragmentManager.findFragmentById(R.id.barMap) as SupportMapFragment?
+        val json = arguments?.getString("approJson")
+        Log.d("DBG", "JSON IN BARLIST: $json")
+        val selectedAppro = Gson().fromJson(json, Array<Appro>::class.java).toList()
+        bars = selectedAppro[0].bars!!
+        coords = mutableListOf()
+        for (item in bars) {
+            coords.add(LatLng(item.latitude!!, item.longitude!!))
+        }
         mapFragment?.getMapAsync(this)
         return view
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         barListRV.layoutManager = LinearLayoutManager(c)
         fusedLocationClient = FusedLocationProviderClient(c)
-        val json = arguments?.getString("approJson")
-        Log.d("DBG","JSON IN BARLIST: $json")
-        val selectedAppro = Gson().fromJson(json,Array<Appro>::class.java).toList()
-        val bars = selectedAppro[0].bars!!
-        barListRV.adapter = ApproBarAdapter(bars,c)
+        barListRV.adapter = ApproBarAdapter(bars, c)
 
     }
-
 
     override fun onMapReady(googleMap: GoogleMap) {
+        Log.d("DBG", "Map ready")
         mMap = googleMap
         mMap.isMyLocationEnabled = false
-        val zoomLevel: Float = 10.toFloat()
-        // Zoom in map a bit
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-        /*val helsinki = LatLng(60.19,24.94)
-        mMap.addMarker(MarkerOptions().position(helsinki).title("Helsinki"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(helsinki))*/
+        val helsinki = LatLng(60.19, 24.94)
         mapInitialized = true
+        when (mMap) {
+            googleMap -> addMarkers()
+        }
+        centerMapAfterUpdate()
     }
 
-    override fun onLocationResults(lat: Double, lon: Double) {
-        // Wait for map to initialize before updating locations
-        if (mapInitialized) {
-            try {
-                currentLocation = LatLng(lat, lon)
-                //mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
-                Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
-                Log.d("DBG", "$lat")
-                Log.d("DBG", "$lon")
-            } catch (e: Exception) {
-                Log.d("DBG", e.toString())
-                Log.d("DBG", "Caused by navigating off from the view")
-            }
-
+    private fun addMarkers() {
+        Log.d("DBG", "added markers")
+        for (coord in coords) {
+            Log.d("DBG", coord.latitude.toString())
+            Log.d("DBG", coord.longitude.toString())
+            mMap.addMarker(
+                MarkerOptions().position(
+                    LatLng(coord.longitude, coord.latitude)
+                ).title("Test")
+            )
         }
-
+    }
+    private fun centerMapAfterUpdate() {
+        val latSum = coords.sumByDouble { it.longitude }
+        val lonSum = coords.sumByDouble { it.latitude }
+        Log.d("DBG latsum", latSum.toString())
+        Log.d("DBG lonsum", lonSum.toString())
+        val latAvg = latSum / coords.size.toDouble()
+        val lonAvg = lonSum / coords.size.toDouble()
+        Log.d("DBG latavg", latAvg.toString())
+        Log.d("DBG lonavg", lonAvg.toString())
+        averageLocation = LatLng(latAvg, lonAvg)
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(averageLocation))
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(10.toFloat()))
+        Log.d("DBG", "Centered map to average location {$averageLocation}")
     }
 }
+
+
 
 
 

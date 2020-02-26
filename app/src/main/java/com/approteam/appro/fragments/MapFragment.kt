@@ -70,23 +70,6 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         mapInitialized = true
     }
 
-    override fun onLocationResults(lat: Double, lon: Double) {
-        // Wait for map to initialize before updating locations
-        if (mapInitialized) {
-            try {
-                currentLocation = LatLng(lat, lon)
-                //mMap.addMarker(MarkerOptions().position(currentLocation).title("My Location"))
-                Log.d("DBG", "MAP FRAGMENT RECEIVED LOCATION")
-                Log.d("DBG", "$lat")
-                Log.d("DBG", "$lon")
-            } catch (e: Exception) {
-                Log.d("DBG", e.toString())
-                Log.d("DBG", "Caused by navigating off from the view")
-            }
-
-        }
-
-    }
 }
 
 
