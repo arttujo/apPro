@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.google.gson.Gson
 
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.stamps_fragment.*
+import kotlinx.android.synthetic.main.stamps_list_item.*
 
 class StampsFragment(ctx: Context):Fragment(){
 
@@ -31,11 +33,16 @@ class StampsFragment(ctx: Context):Fragment(){
         super.onViewCreated(view, savedInstanceState)
         val appro = Gson().fromJson(getCurrentApproData(c),Appro::class.java)
         val bars = appro.bars
-
-
+        val barcode = arguments?.getString("qrcode")
+        Toast.makeText(
+            c,
+            "{$barcode}",
+            Toast.LENGTH_SHORT
+        ).show()
         stamps_grid_view.adapter = StampsViewAdapter(bars!!,c){
             Log.d("DBG", "Grid item $it Clicked!")
         }
+
 
 
     }

@@ -21,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.approteam.appro.MainActivity
@@ -44,6 +45,7 @@ class ScanFragment(ctx: Context) : Fragment() {
     var cameraEnabled = false
     private var c = ctx
     private val CAMERA_REQUEST_CODE = 200
+    private val stampsFragment = StampsFragment(c)
 
 
     override fun onCreateView(
@@ -97,6 +99,7 @@ class ScanFragment(ctx: Context) : Fragment() {
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
                 camera.stop()
             }
+
             // start camera and start blinking of scanTV (Scanning textview)
             override fun surfaceCreated(holder: SurfaceHolder?) {
                 camera.start(holder)
@@ -127,6 +130,7 @@ class ScanFragment(ctx: Context) : Fragment() {
             camera.release()
         }
     }
+
     override fun onResume() {
         super.onResume()
         initScanner()
@@ -155,7 +159,8 @@ class ScanFragment(ctx: Context) : Fragment() {
             activity?.supportFragmentManager?.beginTransaction()?.detach(this)?.attach(this)
                 ?.commit()
         } else {
-            Toast.makeText(c, "Camera permission is needed for using this App!", Toast.LENGTH_LONG).show()
+            Toast.makeText(c, "Camera permission is needed for using this App!", Toast.LENGTH_LONG)
+                .show()
 
         }
     }
@@ -178,21 +183,36 @@ class ScanFragment(ctx: Context) : Fragment() {
                     val barcode = data.getParcelableExtra<Barcode>("barcode")
                     scanBlinkEffectDisable()
                     tV.text = getString(R.string.QR_code_found)
+                    Log.d("DBG, QRSCAN", "{${barcode?.rawValue}}")
+                    val bundle = Bundle()
+                    bundle.putString("qrcode", barcode?.rawValue)
+                    stampsFragment.arguments = bundle
+                    activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)
+                        ?.replace(R.id.container, stampsFragment)?.commit()
+
                 } else {
                     tV.text = "No data"
                 }
             }
         }
     }
+    private fun makeToast(text: String){
+        val text = text
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context,text,duration)
+        toast.show()
+    }
 
     // Create a custom blinking text for scanTV (Scan textview)
     private fun scanBlinkEffectEnable() {
-        blinkAnimation = ObjectAnimator.ofInt(tV, "textColor", Color.WHITE, Color.TRANSPARENT, Color.WHITE)
+        blinkAnimation =
+            ObjectAnimator.ofInt(tV, "textColor", Color.WHITE, Color.TRANSPARENT, Color.WHITE)
         blinkAnimation.duration = 1000
         blinkAnimation.repeatCount = ObjectAnimator.INFINITE
         blinkAnimation.repeatMode = ObjectAnimator.REVERSE
         blinkAnimation.start()
     }
+
     // Disable blinking of scanTV (Scan textview)
     private fun scanBlinkEffectDisable() {
         doAsync {
