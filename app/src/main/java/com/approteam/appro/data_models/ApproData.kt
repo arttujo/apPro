@@ -38,7 +38,9 @@ class Appro {
         @SerializedName("latitude") @Expose var latitude: Double?,
         @SerializedName("longitude") @Expose var longitude: Double?,
         @SerializedName("image") @Expose var image: String?,
-        @SerializedName("barcode") @Expose var barcode: String? = null)
+        @SerializedName("barcode") @Expose var barcode: String? = null,
+        var visited:Boolean = false
+    )
 
 
 }
