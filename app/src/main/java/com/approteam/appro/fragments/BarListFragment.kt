@@ -82,14 +82,14 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
             Log.d("DBG", coord.longitude.toString())
             mMap.addMarker(
                 MarkerOptions().position(
-                    LatLng(coord.longitude, coord.latitude)
+                    LatLng(coord.latitude, coord.longitude)
                 ).title("Test")
             )
         }
     }
     private fun centerMapAfterUpdate() {
-        val latSum = coords.sumByDouble { it.longitude }
-        val lonSum = coords.sumByDouble { it.latitude }
+        val latSum = coords.sumByDouble { it.latitude }
+        val lonSum = coords.sumByDouble { it.longitude }
         Log.d("DBG latsum", latSum.toString())
         Log.d("DBG lonsum", lonSum.toString())
         val latAvg = latSum / coords.size.toDouble()
