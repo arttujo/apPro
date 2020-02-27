@@ -32,6 +32,9 @@ class StampsViewAdapter(val data: List<Appro.ApproBar>, val ctx: Context, val li
 class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
     fun bind(ctx: Context, item: Appro.ApproBar, listener: (Appro.ApproBar) -> Unit)= with(itemView){
         gridItemName.text = item.name
+        if (item.visited) {
+            gridItemName.text = "Completed"
+        }
         setOnClickListener { listener(item) }
 
     }
