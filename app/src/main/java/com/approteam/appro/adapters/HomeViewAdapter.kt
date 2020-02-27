@@ -47,6 +47,8 @@ class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         cardDesc.text = item.description
         picasso.load(item.image).into(cardImage)
         setOnClickListener { listener(item) }
-        cardImage.transitionName = item.name
+        cardImage.transitionName = item.image
+        cardTitle.transitionName = item.name
+        cardDesc.transitionName = item.description
     }
 }

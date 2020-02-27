@@ -13,6 +13,7 @@ import com.approteam.appro.*
 import com.approteam.appro.data_models.Appro
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.*
+import kotlinx.android.synthetic.main.appro_fragment.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.home_list_item.*
 import kotlinx.android.synthetic.main.home_list_item.view.*
@@ -71,7 +72,7 @@ class HomeFragment(ctx: Context) : Fragment() {
             bundle.putString("approPic", it.image)
             bundle.putString("approJson", approString)
             approFragment.arguments = bundle
-            activity?.supportFragmentManager?.beginTransaction()?.addSharedElement(cardImage,it.name!!)?.addToBackStack(null)
+            activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)
                 ?.replace(R.id.container, approFragment)?.commit()
         }
     }

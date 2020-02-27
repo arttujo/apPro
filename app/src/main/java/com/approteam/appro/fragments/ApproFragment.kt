@@ -45,8 +45,11 @@ class ApproFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val transName = arguments?.getString("approName")
-        cardImageAp.transitionName = transName
+        cardImageAp.transitionName = arguments?.getString("approPic")
+        cardTitleAp.transitionName = arguments?.getString("approName")
+        cardDescAp.transitionName = arguments?.getString("approDesc")
+
+
         cardTitleAp.text = arguments?.getString("approName")
         val imageItem = arguments?.getString("approPic")
         cardDescAp.text = arguments?.getString("approDesc")
@@ -54,9 +57,8 @@ class ApproFragment(ctx: Context) : Fragment() {
         setupBundle()
         val json = arguments?.getString("approJson")
         Log.d("DBG","received: "+json)
-
         btnShowBars.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
+            activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
         }
         btnJoinAppro.setOnClickListener {
             approToSharedPrefs(arguments?.getString("approJson")!!)
