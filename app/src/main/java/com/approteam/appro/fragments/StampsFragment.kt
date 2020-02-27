@@ -39,26 +39,39 @@ class StampsFragment(ctx: Context) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stamps_grid_view.layoutManager = GridLayoutManager(c, 2)
         super.onViewCreated(view, savedInstanceState)
+        // Get approstring
         val appro = Gson().fromJson(getCurrentApproData(c), Appro::class.java)
+        // Get bars in appro
         val bars = appro.bars!!
+        // Scanned barcode from bundle
         val barcode = arguments?.getString("qrcode")
         if (barcode != null) {
+            // Indexing if needed,
             for ((index, bar) in bars.withIndex()) {
+                // Iterate through bars to find matching barcode (barname)
                     when (bar.name) {
+                        // When barcode found, either bar is already visited or not
                         barcode -> if (bar.visited) {
                             Log.d("DBG", "Stamp already added")
+                            Toast.makeText(
+                                c,
+                                "You have already collected this stamp",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
                             Log.d("DBG, add", "Adding stamp")
+                            Toast.makeText(
+                                c,
+                                "Stamp added for: $barcode",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             bar.visited = true
                         }
                     }
             }
-            Toast.makeText(
-                c,
-                "Stamp added for: $barcode",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Convert approstring to json
             val approString = Gson().toJson(appro)
+            // Apply approstring in sharedpreferences
             applyStamp(approString)
             Log.d("DBG, appro", bars.toString())
         }
