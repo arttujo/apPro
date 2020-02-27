@@ -11,7 +11,7 @@ import com.approteam.appro.R
 import kotlinx.android.synthetic.main.stamps_list_item.view.*
 
 
-class StampsViewAdapter(val data: MutableList<Appro.ApproBar>, val ctx: Context, val listener: (Appro.ApproBar)-> Unit):RecyclerView.Adapter<StampsViewHolder>(){
+class StampsViewAdapter(val data: List<Appro.ApproBar>, val ctx: Context, val listener: (Appro.ApproBar)-> Unit):RecyclerView.Adapter<StampsViewHolder>(){
 
     override fun getItemCount(): Int {
         return data.size
