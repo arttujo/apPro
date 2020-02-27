@@ -96,7 +96,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         val lonAvg = lonSum / coords.size.toDouble()
         Log.d("DBG latavg", latAvg.toString())
         Log.d("DBG lonavg", lonAvg.toString())
-        var averageLocation = LatLng(latAvg, lonAvg)
+        val averageLocation = LatLng(latAvg, lonAvg)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(averageLocation,13.toFloat()))
 
         Log.d("DBG", "Centered map to average location {$averageLocation}")

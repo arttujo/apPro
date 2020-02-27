@@ -29,7 +29,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/approListRView"
-        android:layout_width="408dp"
+        android:layout_width="match_parent"
         android:layout_height="520dp"
         android:layout_marginTop="45dp"
         android:scrollbars="vertical"

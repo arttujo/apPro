@@ -22,25 +22,25 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="350dp"
+        android:layout_width="350sp"
         android:elevation="20dp"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:layout_height="150dp"
             android:id="@+id/cardImage"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
 
 
-           />
+            />
 
         <TextView
             android:padding="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="temporary"
+            android:text="cardTitle"
             android:id="@+id/cardTitle"
             android:textSize="25sp"
             android:textColor="@color/black"
@@ -52,7 +52,7 @@
             android:id="@+id/cardDesc"
             android:padding="8dp"
             android:layout_height="wrap_content"
-            android:text="temporary"
+            android:text="cardDesc"
 
             />
 
