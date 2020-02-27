@@ -113,8 +113,9 @@ class ScanFragment(ctx: Context) : Fragment() {
                 barCodes = detections!!.detectedItems
                 // Returns value of barcode and is accessible with onActivityResult
                 if (barCodes.size() > 0) {
+                    val barcode = barCodes.valueAt(0).displayValue
                     val intent = Intent()
-                    intent.putExtra("barcode", barCodes.valueAt(0))
+                    intent.putExtra("barcode", barcode)
                     onActivityResult(CommonStatusCodes.SUCCESS, 666, intent)
                 }
             }
@@ -180,12 +181,12 @@ class ScanFragment(ctx: Context) : Fragment() {
         if (requestCode == 0) {
             if (resultCode == 666) {
                 if (data != null) {
-                    val barcode = data.getParcelableExtra<Barcode>("barcode")
+                    val barcode = data.getStringExtra("barcode")
                     scanBlinkEffectDisable()
                     tV.text = getString(R.string.QR_code_found)
-                    Log.d("DBG, QRSCAN", "{${barcode?.rawValue}}")
+                    Log.d("DBG, QRSCAN", barcode)
                     val bundle = Bundle()
-                    bundle.putString("qrcode", barcode?.rawValue)
+                    bundle.putString("qrcode", barcode)
                     stampsFragment.arguments = bundle
                     activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)
                         ?.replace(R.id.container, stampsFragment)?.commit()
@@ -195,12 +196,6 @@ class ScanFragment(ctx: Context) : Fragment() {
                 }
             }
         }
-    }
-    private fun makeToast(text: String){
-        val text = text
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context,text,duration)
-        toast.show()
     }
 
     // Create a custom blinking text for scanTV (Scan textview)
