@@ -35,7 +35,9 @@
         <activity
             android:name=".fragments.MapFragment"
             android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            />
         <activity android:name=".SplashActivity">
 
             <intent-filter>
