@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.approteam.appro.data_models.Appro
@@ -36,6 +37,7 @@ class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
         if (item.visited) {
             gridItemName.visibility = View.GONE
             stampApproved.visibility = View.VISIBLE
+            stampLayout.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAccent))
         }
         setOnClickListener { listener(item) }
 
