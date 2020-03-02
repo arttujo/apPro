@@ -14,5 +14,8 @@
     <string name="leave">Lähde Approsta</string>
     <string name="approLeaveWarn">Varoitus</string>
     <string name="approLeaveMessage">Olet lähtemässä tämänhetkisestä Aprosta! Menetät kaiken edistymisen. Oletko varma?</string>
+    <string name="approReplacementWarn">Varoitus</string>
+    <string name="approReplacementMessage">Olet liittymässä uuteen Approon! Vanhan edistyminen korvataan. Oletko varma?</string>
     <string name="cancel">Peruuta</string>
+    <string name="alreadyInAppro">Liittynyt jo tähän</string>
 </resources>

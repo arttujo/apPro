@@ -13,5 +13,8 @@
     <string name="leave">Leave Appro</string>
     <string name="approLeaveWarn">Warning</string>
     <string name="approLeaveMessage">You are about to leave your current Appro! All progress will be lost. Are you sure?</string>
+    <string name="approReplacementWarn">Warning</string>
+    <string name="approReplacementMessage">You\'re about to join a new Appro! All progress from the old one will be lost. Are you sure?</string>
     <string name="cancel">Cancel</string>
+    <string name="alreadyInAppro">Already in this Appro</string>
 </resources>
