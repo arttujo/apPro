@@ -11,7 +11,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.approteam.appro.DEF_APPRO_VALUE
 import com.approteam.appro.HomeViewAdapter
+import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
 import com.approteam.appro.adapters.StampsViewAdapter
 import com.approteam.appro.data_models.Appro
@@ -40,50 +42,54 @@ class StampsFragment(ctx: Context) : Fragment() {
         stamps_grid_view.layoutManager = GridLayoutManager(c, 2)
         super.onViewCreated(view, savedInstanceState)
         // Get approstring
-        val appro = Gson().fromJson(getCurrentApproData(c), Appro::class.java)
-        // Get bars in appro
-        val bars = appro.bars!!
-        // Scanned barcode from bundle
-        val barcode = arguments?.getString("qrcode")
-        if (barcode != null) {
-            // Indexing if needed,
-            for ((index, bar) in bars.withIndex()) {
-                // Iterate through bars to find matching barcode (barname)
-                    when (bar.name) {
-                        // When barcode found, either bar is already visited or not
-                        barcode -> if (bar.visited) {
-                            Log.d("DBG", "Stamp already added")
-                            Toast.makeText(
-                                c,
-                                "You have already collected this stamp",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Log.d("DBG, add", "Adding stamp")
-                            Toast.makeText(
-                                c,
-                                "Stamp added for: $barcode",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            bar.visited = true
-                        }
-                    }
-            }
-            // Convert approstring to json
-            val approString = Gson().toJson(appro)
-            // Apply approstring in sharedpreferences
-            applyStamp(approString)
-            Log.d("DBG, appro", bars.toString())
-        }
-        stamps_grid_view.adapter = StampsViewAdapter(bars, c) {
-            Log.d("DBG", "Grid item $it Clicked!")
 
-        }
+       if (getCurrentApproData(c) != DEF_APPRO_VALUE) {
+           val str = getCurrentApproData(c)
+           val appro = Gson().fromJson(str, Appro::class.java)
+           // Get bars in appro
+           val bars = appro.bars!!
+           // Scanned barcode from bundle
+           val barcode = arguments?.getString("qrcode")
+           if (barcode != null) {
+               // Indexing if needed,
+               for ((index, bar) in bars.withIndex()) {
+                   // Iterate through bars to find matching barcode (barname)
+                   when (bar.name) {
+                       // When barcode found, either bar is already visited or not
+                       barcode -> if (bar.visited) {
+                           Log.d("DBG", "Stamp already added")
+                           Toast.makeText(
+                               c,
+                               "You have already collected this stamp",
+                               Toast.LENGTH_SHORT
+                           ).show()
+                       } else {
+                           Log.d("DBG, add", "Adding stamp")
+                           Toast.makeText(
+                               c,
+                               "Stamp added for: $barcode",
+                               Toast.LENGTH_SHORT
+                           ).show()
+                           bar.visited = true
+                       }
+                   }
+               }
+               // Convert approstring to json
+               val approString = Gson().toJson(appro)
+               // Apply approstring in sharedpreferences
+               applyStamp(approString)
+               Log.d("DBG, appro", bars.toString())
+           }
+           stamps_grid_view.adapter = StampsViewAdapter(bars, c) {
+               Log.d("DBG", "Grid item $it Clicked!")
+
+           }
+       }
     }
 
     private fun getCurrentApproData(ctx: Context): String {
         val mPrefs = ctx.getSharedPreferences(PREF_APPRO, Context.MODE_PRIVATE)
-        val approJsonString = mPrefs.getString(PREF_APPRO, null)
+        val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
         Log.d("DBG", "GOT APPRO: $approJsonString")
         return approJsonString!!
     }

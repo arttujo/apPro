@@ -2,6 +2,7 @@ package com.approteam.appro
 
 import android.Manifest
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +20,10 @@ interface LocationListener {
         Log.d("DBG", "Location received")
     }
 }
+
+const val PREF_APPRO = "PREF_APPRO"
+const val DEF_APPRO_VALUE = "NULL"
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -90,6 +95,8 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+
+
 
     //Handles Location results.
     private fun onLocationResults(ctx: Context) {

@@ -23,7 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.appro_fragment.*
 
-const val PREF_APPRO = "PREF_APPRO"
+
 
 class ApproFragment(ctx: Context) : Fragment() {
 
