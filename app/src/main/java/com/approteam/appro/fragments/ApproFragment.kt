@@ -69,6 +69,8 @@ class ApproFragment(ctx: Context) : Fragment() {
                 buildAlert(c,json)
             } else {
                 approToSharedPrefs(arguments?.getString("approJson")!!)
+                val homeFragment = HomeFragment(c)
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container,homeFragment)?.commit()
             }
         }
 

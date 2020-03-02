@@ -18,4 +18,5 @@
     <string name="approReplacementMessage">Olet liittymässä uuteen Approon! Vanhan edistyminen korvataan. Oletko varma?</string>
     <string name="cancel">Peruuta</string>
     <string name="alreadyInAppro">Liittynyt jo tähän</string>
+    <string name="noCurrAppro">Et ole missään aprossa tällä hetkellä</string>
 </resources>

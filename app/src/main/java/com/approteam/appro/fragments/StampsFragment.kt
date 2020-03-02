@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class StampsFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stamps_grid_view.layoutManager = GridLayoutManager(c, 2)
+        setApproName()
         super.onViewCreated(view, savedInstanceState)
         // Get approstring
 
@@ -85,6 +87,17 @@ class StampsFragment(ctx: Context) : Fragment() {
 
            }
        }
+    }
+
+    private fun setApproName(){
+        val approString = getCurrentApproData(c)
+        if (approString!= DEF_APPRO_VALUE){
+            val appro = Gson().fromJson(approString,Appro::class.java)
+            currApproNameLabel.text = appro.name
+        } else {
+            currApproNameLabel.text = getString(R.string.noCurrAppro)
+            currApproNameLabel.gravity = Gravity.CENTER
+        }
     }
 
     private fun getCurrentApproData(ctx: Context): String {

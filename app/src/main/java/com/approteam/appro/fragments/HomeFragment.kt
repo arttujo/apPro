@@ -80,7 +80,20 @@ class HomeFragment(ctx: Context) : Fragment() {
         }
     }
 
+    private fun setCurrApproText(){
+        val currAppro = getCurrentApproData(c)
+        if (currAppro != DEF_APPRO_VALUE) {
+            val appro = Gson().fromJson(currAppro,Appro::class.java)
 
+        }
+    }
+
+    private fun getCurrentApproData(ctx: Context):String{
+        val mPrefs = ctx.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
+        val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
+        Log.d("DBG", "GOT APPRO: $approJsonString")
+        return approJsonString!!
+    }
 
     private fun buildAlert(ctx: Context){
         val builder = AlertDialog.Builder(ctx)
