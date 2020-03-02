@@ -63,27 +63,27 @@ class MainActivity : AppCompatActivity() {
             when (menuitem.itemId) {
                 R.id.navigation_home -> {
                     Log.d("DBG", "Home clicked")
-                    supportFragmentManager.beginTransaction().addToBackStack(null).replace(R.id.container, homeFragment)
+                    supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment)
                         .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_map -> {
                     Log.d("DBG", "Map clicked")
-                    supportFragmentManager.beginTransaction().addToBackStack(null).replace(R.id.container, mapFragment)
+                    supportFragmentManager.beginTransaction().replace(R.id.container, mapFragment)
                         .commit()
 
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_scan -> {
                     Log.d("DBG", "Scan Clicked")
-                    supportFragmentManager.beginTransaction().addToBackStack(null).replace(R.id.container, scanFragment)
+                    supportFragmentManager.beginTransaction().replace(R.id.container, scanFragment)
                         .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.naigation_stamps -> {
                     Log.d("DBG", "Stamps Selected")
-                    supportFragmentManager.beginTransaction().addToBackStack(null).replace(R.id.container,stampsFragment).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.container,stampsFragment).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
