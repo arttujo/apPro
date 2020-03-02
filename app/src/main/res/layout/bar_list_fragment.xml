@@ -13,9 +13,8 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="407dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/barListRV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,10 +23,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/barMapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent" />
 
 
     </fragment>
@@ -39,12 +35,10 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="10dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barMap"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/barMap" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

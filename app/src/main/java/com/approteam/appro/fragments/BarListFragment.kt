@@ -60,14 +60,12 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         barListRV.layoutManager = LinearLayoutManager(c)
         fusedLocationClient = FusedLocationProviderClient(c)
         barListRV.adapter = ApproBarAdapter(bars, c)
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("DBG", "Map ready")
         mMap = googleMap
         mMap.isMyLocationEnabled = false
-        val helsinki = LatLng(60.19, 24.94)
         mapInitialized = true
         when (mMap) {
             googleMap -> addMarkers()
@@ -77,16 +75,17 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
 
     private fun addMarkers() {
         Log.d("DBG", "added markers")
-        for (coord in coords) {
+        for (coord in bars) {
             Log.d("DBG", coord.latitude.toString())
             Log.d("DBG", coord.longitude.toString())
             mMap.addMarker(
                 MarkerOptions().position(
-                    LatLng(coord.latitude, coord.longitude)
-                ).title("Test")
+                    LatLng(coord.latitude!!, coord.longitude!!)
+                ).title(coord.name)
             )
         }
     }
+
     private fun centerMapAfterUpdate() {
         val latSum = coords.sumByDouble { it.latitude }
         val lonSum = coords.sumByDouble { it.longitude }
