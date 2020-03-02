@@ -104,18 +104,21 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     }
 
     private fun centerMapAfterUpdate() {
-        val latSum = coords.sumByDouble { it.latitude }
-        val lonSum = coords.sumByDouble { it.longitude }
-        Log.d("DBG latsum", latSum.toString())
-        Log.d("DBG lonsum", lonSum.toString())
-        val latAvg = latSum / coords.size.toDouble()
-        val lonAvg = lonSum / coords.size.toDouble()
-        Log.d("DBG latavg", latAvg.toString())
-        Log.d("DBG lonavg", lonAvg.toString())
-        val averageLocation = LatLng(latAvg, lonAvg)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(averageLocation,13.toFloat()))
+        if (!coords.isNullOrEmpty()) {
 
-        Log.d("DBG", "Centered map to average location {$averageLocation}")
+            val latSum = coords.sumByDouble { it.latitude }
+            val lonSum = coords.sumByDouble { it.longitude }
+            Log.d("DBG latsum", latSum.toString())
+            Log.d("DBG lonsum", lonSum.toString())
+            val latAvg = latSum / coords.size.toDouble()
+            val lonAvg = lonSum / coords.size.toDouble()
+            Log.d("DBG latavg", latAvg.toString())
+            Log.d("DBG lonavg", lonAvg.toString())
+            val averageLocation = LatLng(latAvg, lonAvg)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(averageLocation, 13.toFloat()))
+
+            Log.d("DBG", "Centered map to average location {$averageLocation}")
+        }
     }
 
 

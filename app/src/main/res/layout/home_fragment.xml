@@ -9,23 +9,16 @@
     android:orientation="vertical">
 
 
-
     <Button
         android:id="@+id/createButton"
-        android:layout_width="134dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="139dp"
-        android:layout_marginEnd="139dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="32dp"
+
+        android:layout_marginBottom="8dp"
         android:text="Create Appro"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_constraintEnd_toEndOf="parent"
-        tools:layout_constraintStart_toStartOf="parent"
-        tools:layout_constraintTop_toBottomOf="@+id/approListRView" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/approListRView"
@@ -47,6 +40,16 @@
         android:layout_marginStart="164dp"
         android:layout_marginBottom="204dp"
         app:layout_constraintBottom_toBottomOf="@+id/approListRView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/leaveApproBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/leave"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 

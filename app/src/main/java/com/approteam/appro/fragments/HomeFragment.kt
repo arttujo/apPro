@@ -1,12 +1,15 @@
 package com.approteam.appro.fragments
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
@@ -37,6 +40,7 @@ class HomeFragment(ctx: Context) : Fragment() {
         btn.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, createApproFragment)?.commit()
         }
+
         return view
     }
 
@@ -61,7 +65,35 @@ class HomeFragment(ctx: Context) : Fragment() {
 
         approListRView.layoutManager = LinearLayoutManager(context)
         super.onViewCreated(view, savedInstanceState)
+        leaveApproBtn.setOnClickListener {
+          buildAlert(c)
+        }
     }
+
+    private fun removeAppro(){
+        val mPrefs: SharedPreferences = c.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
+        val editor = mPrefs.edit()
+        val str = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
+        if (str != null){
+            editor.putString(PREF_APPRO, DEF_APPRO_VALUE)
+            editor.apply()
+        }
+    }
+
+
+
+    private fun buildAlert(ctx: Context){
+        val builder = AlertDialog.Builder(ctx)
+        builder.setTitle(R.string.approLeaveWarn)
+        builder.setMessage(R.string.approLeaveMessage)
+        builder.setPositiveButton("Ok"){ dialog, which -> removeAppro() }
+        builder.setNegativeButton(R.string.cancel){dialog, which -> Log.d("DBG","Cancelled leave") }
+        val alert: AlertDialog = builder.create()
+        alert.setCancelable(true)
+        alert.show()
+    }
+
+
     //Click handler for opening an appro
     fun approClick(appros: List<Appro>,approJson: String){
         approListRView.adapter = HomeViewAdapter(appros, c){
