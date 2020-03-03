@@ -7,10 +7,11 @@
     <string name="appro">Appro</string>
     <string name="stamps">Stamps</string>
     <string name="fit_image_to_scan">Qrcode camera surfaceview</string>
-    <string name="QR_search_text">Point your device\'s camera on the QR-code</string>
+    <string name="QR_search_text">Scan a QR-code</string>
     <string name="QR_code_found">Code Found</string>
-    <string name="join">Join</string>
+    <string name="join">Join Appro</string>
     <string name="leave">Leave Appro</string>
+    <string name="create">Create Appro</string>
     <string name="approLeaveWarn">Warning</string>
     <string name="approLeaveMessage">You are about to leave your current Appro! All progress will be lost. Are you sure?</string>
     <string name="approReplacementWarn">Warning</string>

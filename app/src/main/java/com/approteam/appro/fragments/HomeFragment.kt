@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
@@ -37,9 +38,13 @@ class HomeFragment(ctx: Context) : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
         val btn = view.findViewById<Button>(R.id.createButton)
+        val lvBtn = view.findViewById<Button>(R.id.leaveApproBtn)
         btn.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)?.replace(R.id.container, createApproFragment)?.commit()
         }
+        val jsonString: String? = getCurrentApproData(c)
+        if (jsonString == "NULL") {
+            lvBtn.visibility = View.INVISIBLE       }
 
         return view
     }
@@ -77,6 +82,7 @@ class HomeFragment(ctx: Context) : Fragment() {
         if (str != null){
             editor.putString(PREF_APPRO, DEF_APPRO_VALUE)
             editor.apply()
+            activity?.supportFragmentManager?.beginTransaction()?.detach(this)!!.attach(this).commit()
         }
     }
 
