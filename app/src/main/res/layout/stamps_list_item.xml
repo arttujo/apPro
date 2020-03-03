@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="175dp"
-    android:padding="15dp"
     android:layout_height="175dp"
     android:layout_gravity="center"
     android:descendantFocusability="blocksDescendants"
@@ -13,7 +12,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/orange"
+        android:background="@drawable/circle"
         >
 
     <TextView
@@ -28,7 +27,11 @@
             android:id="@+id/stampApproved"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/app_icon" />
+            android:padding="30dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/app_icon"
+            android:background="@color/white"/>
+
 
     </LinearLayout>
 

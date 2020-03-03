@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.approteam.appro.DEF_APPRO_VALUE
+import com.approteam.appro.*
 import com.approteam.appro.LocationListener
-import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
 import com.approteam.appro.data_models.Appro
 import com.google.android.gms.location.*
@@ -89,7 +88,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.setAllGesturesEnabled(true)
         mMap.isMyLocationEnabled = true
         val zoomLevel: Float = 10.toFloat()
         // Zoom in map a bit
