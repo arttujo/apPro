@@ -65,6 +65,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("DBG", "Map ready")
         mMap = googleMap
+        mMap.uiSettings.isZoomControlsEnabled = true
         mMap.isMyLocationEnabled = false
         mapInitialized = true
         when (mMap) {

@@ -13,10 +13,7 @@ import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
 import com.approteam.appro.data_models.Appro
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import java.lang.Exception
@@ -92,6 +89,7 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.uiSettings.isZoomControlsEnabled = true
         mMap.isMyLocationEnabled = true
         val zoomLevel: Float = 10.toFloat()
         // Zoom in map a bit
