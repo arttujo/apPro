@@ -20,9 +20,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.bar_list_fragment.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.lang.Exception
 
 class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListener {
 
@@ -59,7 +56,14 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         super.onViewCreated(view, savedInstanceState)
         barListRV.layoutManager = LinearLayoutManager(c)
         fusedLocationClient = FusedLocationProviderClient(c)
-        barListRV.adapter = ApproBarAdapter(bars, c)
+        barListRV.adapter = ApproBarAdapter(bars, c) {
+            if (mMap.cameraPosition != null) {
+                val barLocation = LatLng(it.latitude!!, it.longitude!!)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(barLocation, 15.toFloat()))
+            }
+        }
+        val barCount = bars.size
+        barCountTV.text = "Total bars: $barCount"
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
