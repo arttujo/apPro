@@ -1,7 +1,11 @@
 package com.approteam.appro.fragments
 
+import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +23,8 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.createappro_fragment.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.io.IOException
+import java.io.InputStream
 import java.net.URL
 
 
@@ -29,7 +35,8 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     private var cMonth:Int? =null
     private var cYear:Int?=null
     private var cDay:Int?=null
-
+    private val IMAGE_PICK_CODE = 999
+    private var imageData: ByteArray? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +62,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         }
 
         selectImageBtn.setOnClickListener {
-
+            launchGallery()
         }
 
         createApproCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -70,6 +77,32 @@ class CreateApproFragment(ctx: Context) : Fragment() {
             activity?.supportFragmentManager?.popBackStack()
         }
     }
+
+    @Throws(IOException::class)
+    private fun createImageData(uri: Uri){
+        val inputStream = c.contentResolver.openInputStream(uri)
+        inputStream?.buffered()?.use {
+            imageData = it.readBytes()
+        }
+    }
+
+    private fun launchGallery(){
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent,IMAGE_PICK_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            var uri = data?.data
+            if (uri!=null){
+                approImage.setImageURI(uri)
+                createImageData(uri)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
 }
 
 
