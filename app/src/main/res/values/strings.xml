@@ -19,4 +19,11 @@
     <string name="cancel">Cancel</string>
     <string name="alreadyInAppro">Already in this Appro</string>
     <string name="noCurrAppro">You are not currently in any Appro</string>
+    <string name="selectImage">Select Image</string>
+    <string name="nameOfAppro">Name of the Appro</string>
+    <string name="descForAppro">Description for Appro</string>
+    <string name="accept">Accept</string>
+    <string name="selectBars">Select Bars</string>
+    <string name="price">Price</string>
+    <string name="location">Location</string>
 </resources>

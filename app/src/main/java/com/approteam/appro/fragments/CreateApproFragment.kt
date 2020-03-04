@@ -23,7 +23,13 @@ import java.net.URL
 
 
 class CreateApproFragment(ctx: Context) : Fragment() {
-    val c = ctx
+
+    private val c = ctx
+    private val barsFrag = CreateApproBarsFragment(c)
+    private var cMonth:Int? =null
+    private var cYear:Int?=null
+    private var cDay:Int?=null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,23 +43,26 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        createApproRec.layoutManager = LinearLayoutManager(c)
-        val itemDecor = DividerItemDecoration(c,HORIZONTAL)
-        createApproRec.addItemDecoration(itemDecor)
-        doAsync {
-            val json = URL("http://Foxer153.asuscomm.com:3001/bars").readText()
-            val bars = Gson().fromJson(json,Array<Bar>::class.java).toList()
-            uiThread {
-                createApproProgressBar.visibility = View.GONE
-                createApproRec.adapter = CreateApproAdapter(bars,c)
-                Log.d("DBG",bars.toString())
-            }
-        }
+
         super.onViewCreated(view, savedInstanceState)
         val btn = view.findViewById<Button>(R.id.cancelButton)
         val editName = view.findViewById<EditText>(R.id.editApproName)
         val editDesc = view.findViewById<EditText>(R.id.editApproDesc)
 
+        selectBars.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)
+                ?.replace(R.id.container, barsFrag)?.commit()
+        }
+
+        selectImageBtn.setOnClickListener {
+
+        }
+
+        createApproCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            cYear = year
+            cMonth = month
+            cDay = dayOfMonth
+        }
 
 
         btn?.setOnClickListener {

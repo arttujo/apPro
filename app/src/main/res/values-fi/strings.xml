@@ -20,4 +20,11 @@
     <string name="cancel">Peruuta</string>
     <string name="alreadyInAppro">Liittynyt jo tähän</string>
     <string name="noCurrAppro">Et ole missään aprossa tällä hetkellä</string>
+    <string name="selectImage">Valitse Kuva</string>
+    <string name="nameOfAppro">Appron Nimi</string>
+    <string name="descForAppro">Appron Kuvaus</string>
+    <string name="accept">Hyväksy</string>
+    <string name="selectBars">Valitse Baarit</string>
+    <string name="price">Hinta</string>
+    <string name="location">Sijainti</string>
 </resources>
