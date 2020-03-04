@@ -120,7 +120,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editApproDesc" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/approLocation"
         android:layout_width="13dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
