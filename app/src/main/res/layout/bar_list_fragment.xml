@@ -5,7 +5,6 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".MainActivity">
 
     <fragment
@@ -14,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="407dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/barListRV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,10 +21,26 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/barMapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
 
     </fragment>
+
+    <TextView
+        android:id="@+id/barCountTV"
+        android:text="totalBarCount"
+        android:layout_marginStart="4dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/barListRV"
+        app:layout_constraintTop_toBottomOf="@+id/barMap">
+
+    </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/barListRV"
@@ -36,9 +50,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
         android:scrollbars="vertical"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barMap" />
+        app:layout_constraintTop_toBottomOf="@+id/barCountTV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
