@@ -1,14 +1,13 @@
 package com.approteam.appro.data_models
 
 import com.google.gson.annotations.Expose
-
 import com.google.gson.annotations.SerializedName
 
 
 class Bar {
-    @SerializedName("phonenumber")
+    @SerializedName("Id")
     @Expose
-    var phonenumber: String? = null
+    var id: Int? = null
     @SerializedName("name")
     @Expose
     var name: String? = null
@@ -18,17 +17,14 @@ class Bar {
     @SerializedName("latitude")
     @Expose
     var latitude: Double? = null
-    @SerializedName("tags")
-    @Expose
-    var tags: List<String>? = null
-    @SerializedName("homepage")
-    @Expose
-    var homepage: String? = null
     @SerializedName("longitude")
     @Expose
     var longitude: Double? = null
-    @SerializedName("description")
+    @SerializedName("image")
     @Expose
-    var description: String? = null
+    var image: Any? = null
+    @SerializedName("qr")
+    @Expose
+    var qr: String? = null
 
 }

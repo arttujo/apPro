@@ -41,7 +41,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         val itemDecor = DividerItemDecoration(c,HORIZONTAL)
         createApproRec.addItemDecoration(itemDecor)
         doAsync {
-            val json = URL("http://Foxer153.asuscomm.com:3001/all").readText()
+            val json = URL("http://Foxer153.asuscomm.com:3001/bars").readText()
             val bars = Gson().fromJson(json,Array<Bar>::class.java).toList()
             uiThread {
                 createApproProgressBar.visibility = View.GONE
