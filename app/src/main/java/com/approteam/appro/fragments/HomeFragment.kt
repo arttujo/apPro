@@ -56,7 +56,7 @@ class HomeFragment(ctx: Context) : Fragment() {
                         uiThread {
                             Log.d("DBG",appros.toString())
                             Log.d("DBG", "UI THREAD")
-                            homeProgressBar.visibility = View.GONE
+                            homeProgressBar.visibility = View.INVISIBLE
                             approClick(appros, String(bytes))
                         }
                     }
