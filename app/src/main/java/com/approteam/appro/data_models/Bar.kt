@@ -26,5 +26,6 @@ class Bar {
     @SerializedName("qr")
     @Expose
     var qr: String? = null
+    var isSelected:Boolean = false
 
 }

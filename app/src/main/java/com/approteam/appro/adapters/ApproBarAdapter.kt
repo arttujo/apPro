@@ -2,6 +2,7 @@ package com.approteam.appro.adapters
 
 import kotlinx.android.synthetic.main.bar_list_item.view.*
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +18,16 @@ class ApproBarAdapter(
     private val listener: (Appro.ApproBar) -> Unit
 ) : RecyclerView.Adapter<ApproBarViewHolder>() {
 
+
+    private var selectedPos = -1
     override fun getItemCount(): Int {
         return data.size
     }
 
     override fun onBindViewHolder(holder: ApproBarViewHolder, position: Int) {
         holder.bind(ctx, position, data[position], listener)
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ApproBarViewHolder {

@@ -36,13 +36,22 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         createApproBarsRV.layoutManager = LinearLayoutManager(c)
         val itemDecor = DividerItemDecoration(c, ClipDrawable.HORIZONTAL)
+
+        val name = arguments?.getString("NAME")
+        val desc = arguments?.getString("DESC")
+        val image = arguments?.getByteArray("IMAGE")
+        val price = arguments?.getDouble("PRICE")
+        val location = arguments?.getString("LOC")
+        val date = arguments?.getString("DATE")
+        Log.d("DBG", "From Bundle: $name, $desc, $price,$location,$date")
+
         createApproBarsRV.addItemDecoration(itemDecor)
         doAsync {
             val json = URL("http://Foxer153.asuscomm.com:3001/bars").readText()
             val bars = Gson().fromJson(json,Array<Bar>::class.java).toList()
             uiThread {
                 createApproBarsProgressBar.visibility = View.GONE
-                createApproBarsRV.adapter = CreateApproAdapter(bars,c)
+                createApproBarsRV.adapter = CreateApproAdapter(bars,c){}
                 Log.d("DBG",bars.toString())
             }
         }

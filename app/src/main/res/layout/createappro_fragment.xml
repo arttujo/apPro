@@ -107,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editApproDesc" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/approLocation"
         android:layout_width="253dp"
         android:layout_height="23dp"
         android:layout_marginTop="10dp"
@@ -120,7 +120,6 @@
         app:layout_constraintTop_toBottomOf="@+id/editApproDesc" />
 
     <TextView
-        android:id="@+id/approLocation"
         android:layout_width="13dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
