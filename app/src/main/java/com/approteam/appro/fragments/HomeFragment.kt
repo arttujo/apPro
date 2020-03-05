@@ -51,7 +51,7 @@ class HomeFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         doAsync {
-            Fuel.get("http://foxer153.asuscomm.com:3001/appro")
+            Fuel.get("http://foxer153.asuscomm.com:3001/test")
                 .response { _, _, result ->
                     val (bytes,error) = result
                     if(bytes!=null){
