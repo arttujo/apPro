@@ -11,37 +11,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.R
 import com.approteam.appro.adapters.CreateApproAdapter
-import com.approteam.appro.data_models.Appro
 import com.approteam.appro.data_models.Bar
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.BlobDataPart
 import com.github.kittinunf.fuel.core.FileDataPart
-import com.github.kittinunf.fuel.core.Headers
 import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.createappro_bars_fragment.*
-import kotlinx.android.synthetic.main.createappro_fragment.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
-import java.net.URI
 import java.net.URL
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 
 class CreateApproBarsFragment(ctx: Context) : Fragment(){
 
-    val c = ctx
+    private val c = ctx
     private lateinit var allBars: List<Bar>
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,15 +49,6 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         createApproBarsRV.layoutManager = LinearLayoutManager(c)
         val itemDecor = DividerItemDecoration(c, ClipDrawable.HORIZONTAL)
-        val imageUri = arguments?.getString("IMAGEURI")
-        val name = arguments?.getString("NAME")
-        val desc = arguments?.getString("DESC")
-        val image = arguments?.getByteArray("IMAGE")
-        val price = arguments?.getDouble("PRICE")
-        val location = arguments?.getString("LOC")
-        val date = arguments?.getString("DATE")
-        Log.d("DBG", "From Bundle: $name, $desc, $price,$location,$date")
-        Log.d("DBG", "IMAGE URI FROM BUNDLE: $imageUri")
         createApproBarsRV.addItemDecoration(itemDecor)
         doAsync {
             val json = URL("http://Foxer153.asuscomm.com:3001/bars").readText()
@@ -131,7 +117,6 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
                         Log.d("DBG", uriFromJson)
                         approHelper(uriFromJson,barIds)
 
-
                     } else {
                         Log.d("DBG", error.toString())
                     }
@@ -139,21 +124,42 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
         }
     }
 
+    private fun makeToast(text: String){
+        val text = text
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context,text,duration)
+        toast.show()
+    }
+
     private fun approHelper(imageUri: String,bars:MutableList<Int>){
         val name = arguments?.getString("NAME")
         val desc = arguments?.getString("DESC")
-        val imageData = arguments?.getByteArray("IMAGEDATA")
         val price = arguments?.getDouble("PRICE")
         val location = arguments?.getString("LOC")
         val date = arguments?.getString("DATE")
         val time = arguments?.getString("TIME")
+        val homef = HomeFragment(c)
+        doAsync {
+            Fuel.post("http://foxer153.asuscomm.com:3001/createAppro")
+                .jsonBody("{\"name\":\"${name}\", \"desc\":\"${desc}\", \"price\":$price, \"location\":\"${location}\", \"image\":\"${imageUri}\",\"time\":\"${time}\", \"date\":\"${date}\",\"bars\": $bars  }")
+                .response { result ->
 
-        Fuel.post("http://foxer153.asuscomm.com:3001/createAppro")
-            .jsonBody("{\"name\":\"${name}\", \"desc\":\"${desc}\", \"price\":$price, \"location\":\"${location}\", \"image\":\"${imageUri}\",\"time\":\"${time}\", \"date\":\"${date}\",\"bars\": $bars  }")
-            .response { result ->
-
-            }
-
+                    val (bytes, error) = result
+                    val responseJson = JSONObject(String(bytes!!))
+                    val response = responseJson.getString("response")
+                    val exists = responseJson.getBoolean("exists")
+                    Log.d("DBG", response)
+                    Log.d("DBG", exists.toString())
+                    uiThread {
+                        if (!exists){
+                            makeToast(getString(R.string.approCreated))
+                            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container,homef)?.commit()
+                        } else{
+                            makeToast(getString(R.string.approNotCreated))
+                        }
+                    }
+                }
+        }
     }
 
     private fun buildAlert(ctx: Context,bars: List<Bar>){

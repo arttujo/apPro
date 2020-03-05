@@ -28,5 +28,7 @@
     <string name="location">Location</string>
     <string name="aboutToCreate">Are you sure you want to create Appro with bars:</string>
     <string name="time">Time (16:00)</string>
+    <string name="approCreated">Appro Created!</string>
+    <string name="approNotCreated">Appro with the given name already exists</string>
 
 </resources>
