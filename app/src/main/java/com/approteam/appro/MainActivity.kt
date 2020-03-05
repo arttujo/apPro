@@ -1,6 +1,7 @@
 package com.approteam.appro
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -26,7 +27,7 @@ const val DEF_APPRO_VALUE = "NULL"
 
 
 class MainActivity : AppCompatActivity() {
-
+    private val READ_STORAGE_CODE = 29
     var activityCallback: LocationListener? = null
 
     //Fragments
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        verifyStoragePermissions(this)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
         permissionRequest()
@@ -143,6 +145,26 @@ class MainActivity : AppCompatActivity() {
         Log.d("DBG", "Paused")
         stopLocationUpdates()
     }
+
+    private val PERMISSIONS_STORAGE = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    private fun verifyStoragePermissions(activity: Activity?) { // Check if we have write permission
+        val permission = ActivityCompat.checkSelfPermission(
+            activity!!,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permission != PackageManager.PERMISSION_GRANTED) { // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                activity,
+                PERMISSIONS_STORAGE,
+                READ_STORAGE_CODE
+            )
+        }
+    }
+
 
     //Request background and fine location perms
     private fun permissionRequest() {

@@ -1,19 +1,22 @@
 package com.approteam.appro.fragments
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import androidx.core.widget.addTextChangedListener
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.approteam.appro.MainActivity
 import com.approteam.appro.R
 import kotlinx.android.synthetic.main.createappro_fragment.*
 
@@ -25,11 +28,8 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     private val IMAGE_PICK_CODE = 999
     private var imageData: ByteArray? = null
     private var date: String? = null
+    private var imageUri:Uri? = null
 
-    private val editTextPrice: EditText? = null
-    private val editTextName: EditText? = null
-    private val editTextDesc: EditText? = null
-    private val editTextLocation: EditText? = null
 
 
     override fun onCreateView(
@@ -46,16 +46,19 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         priceField!!.addTextChangedListener(TextWatcher)
         approLocation!!.addTextChangedListener(TextWatcher)
         editApproDesc!!.addTextChangedListener(TextWatcher)
+        approTime!!.addTextChangedListener(TextWatcher)
         editApproName!!.addTextChangedListener(TextWatcher)
     }
     private fun setupBundle(){
         val bundle = Bundle()
-        bundle.putByteArray("IMAGE",imageData)
+        bundle.putByteArray("IMAGEDATA",imageData)
         bundle.putDouble("PRICE",priceField.text.toString().toDouble())
+        bundle.putString("IMAGEURI", imageUri.toString())
         bundle.putString("NAME",editApproName.text.toString())
         bundle.putString("DESC",editApproDesc.text.toString())
         bundle.putString("LOC",approLocation.text.toString())
         bundle.putString("DATE",date)
+        bundle.putString("TIME",approTime.text.toString())
         barsFrag.arguments = bundle
     }
 
@@ -75,7 +78,9 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         }
 
         createApproCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            date = "$year-$month-$dayOfMonth"
+            val monthFix = month + 1
+            date = "$year-$monthFix-$dayOfMonth"
+            Log.d("DBG","DATE: $date")
             checkForm()
         }
 
@@ -111,7 +116,8 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         val locationInput = approLocation!!.text.toString().trim { it <= ' ' }
         val nameInput = editApproName!!.text.toString().trim{ it <= ' '}
         val descInput = editApproDesc!!.text.toString().trim { it <= ' ' }
-        selectBars.isEnabled = priceInput.isNotEmpty() && locationInput.isNotEmpty() && nameInput.isNotEmpty() && descInput.isNotEmpty() && date != null && imageData != null
+        val timeInput = approTime!!.text.toString().trim{it <= ' '}
+        selectBars.isEnabled = priceInput.isNotEmpty() && locationInput.isNotEmpty() && nameInput.isNotEmpty() && descInput.isNotEmpty() && timeInput.isNotEmpty() && date != null && imageData != null
     }
 
     //Creates Image data for the selected image
@@ -132,13 +138,17 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             var uri = data?.data
+
             if (uri!=null){
                 approImage.setImageURI(uri)
                 createImageData(uri)
+                imageUri = uri
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+
 
 }
 

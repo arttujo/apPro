@@ -24,6 +24,9 @@
     <string name="descForAppro">Description for Appro</string>
     <string name="accept">Accept</string>
     <string name="selectBars">Select Bars</string>
-    <string name="price">Price</string>
+    <string name="price">Price €</string>
     <string name="location">Location</string>
+    <string name="aboutToCreate">Are you sure you want to create Appro with bars:</string>
+    <string name="time">Time (16:00)</string>
+
 </resources>

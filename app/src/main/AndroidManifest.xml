@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.location.gps" /> <!-- Permission for location ! -->
     <uses-feature android:name="android.hardware.camera"/>
@@ -25,6 +27,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_new_launcher_round"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"

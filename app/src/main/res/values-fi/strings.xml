@@ -25,6 +25,8 @@
     <string name="descForAppro">Appron Kuvaus</string>
     <string name="accept">Hyväksy</string>
     <string name="selectBars">Valitse Baarit</string>
-    <string name="price">Hinta</string>
+    <string name="price">Hinta €</string>
     <string name="location">Sijainti</string>
+    <string name="aboutToCreate">Oletko varma, että luot appron näillä baareilla:</string>
+    <string name="time">Aika (16:00)</string>
 </resources>
