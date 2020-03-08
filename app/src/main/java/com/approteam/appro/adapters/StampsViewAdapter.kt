@@ -37,7 +37,9 @@ class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
         if (item.visited) {
             gridItemName.visibility = View.GONE
             stampApproved.visibility = View.VISIBLE
-            stampLayout.setBackgroundColor(ContextCompat.getColor(ctx, R.color.colorAccent))
+        } else {
+            stampApproved.visibility = View.INVISIBLE
+            gridItemName.visibility = View.VISIBLE
         }
         setOnClickListener { listener(item) }
 

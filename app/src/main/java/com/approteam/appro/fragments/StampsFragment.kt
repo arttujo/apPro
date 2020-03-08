@@ -59,6 +59,8 @@ class StampsFragment(ctx: Context) : Fragment() {
                    when (bar.name) {
                        // When barcode found, either bar is already visited or not
                        barcode -> if (bar.visited) {
+                           Log.d("DBG, barname", bar.name!!)
+                           Log.d("DBG barcode", barcode)
                            Log.d("DBG", "Stamp already added")
                            Toast.makeText(
                                c,
