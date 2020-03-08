@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.home_list_item.*
 import kotlinx.android.synthetic.main.home_list_item.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.lang.Exception
 
 
 class HomeFragment(ctx: Context) : Fragment() {
@@ -61,7 +62,11 @@ class HomeFragment(ctx: Context) : Fragment() {
                         uiThread {
                             Log.d("DBG",appros.toString())
                             Log.d("DBG", "UI THREAD")
-                            homeProgressBar.visibility = View.INVISIBLE
+                            try {
+                                homeProgressBar.visibility = View.INVISIBLE
+                            } catch (error: Exception) {
+                                Log.e("homeprogressBar", error.toString())
+                            }
                             approClick(appros, String(bytes))
                         }
                     }
@@ -115,16 +120,26 @@ class HomeFragment(ctx: Context) : Fragment() {
 
     //Click handler for opening an appro
     fun approClick(appros: List<Appro>,approJson: String){
-        approListRView.adapter = HomeViewAdapter(appros, c){
-            val bundle = Bundle()
-            val approString = Gson().toJson(it)
-            bundle.putString("approName", it.name)
-            bundle.putString("approDesc", it.description)
-            bundle.putString("approPic", it.image)
-            bundle.putString("approJson", approString)
-            approFragment.arguments = bundle
-            activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)
-                ?.replace(R.id.container, approFragment)?.commit()
+        try {
+            approListRView.adapter = HomeViewAdapter(appros, c) {
+                val bundle = Bundle()
+                val approString = Gson().toJson(it)
+                bundle.putString("approName", it.name)
+                bundle.putString("approDesc", it.description)
+                bundle.putString("approPic", it.image)
+                bundle.putString("approJson", approString)
+                approFragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(
+                    android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right,
+                    android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right
+                )?.addToBackStack(null)
+                    ?.replace(R.id.container, approFragment)?.commit()
+            }
+        } catch (error: Exception) {
+            Log.e("approCLICK", error.toString())
+
         }
     }
 
