@@ -54,7 +54,7 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
             val json = URL("http://Foxer153.asuscomm.com:3001/bars").readText()
             val bars = Gson().fromJson(json,Array<Bar>::class.java).toList()
             uiThread {
-                createApproBarsProgressBar.visibility = View.GONE
+                createApproBarsProgressBar.visibility = View.INVISIBLE
                 createApproBarsRV.adapter = CreateApproAdapter(bars,c){}
                 allBars=bars
                 Log.d("DBG",bars.toString())
@@ -66,7 +66,7 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
 
         super.onViewCreated(view, savedInstanceState)
     }
-
+    //Builds the list of selected bars
     private fun buildSelectedBarsList(bars: List<Bar>):List<Bar>{
         val selectedBars: MutableList<Bar> = ArrayList()
         bars.forEach {
@@ -77,34 +77,33 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
         }
         return selectedBars
     }
-
+    //Gets the real file path of the file. Used to get in fileupload
     private fun getRealPathFromURI(context: Context, contentUri: Uri): String? {
         var cursor: Cursor? = null
         return try {
             val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null)
-            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor!!.moveToFirst()
-            cursor!!.getString(column_index)
+            cursor = context.contentResolver.query(contentUri, proj, null, null, null)
+            val columnIndex: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(columnIndex)
         } catch (e: Exception) {
             Log.e("DBG", "getRealPathFromURI Exception : $e")
             ""
         } finally {
-            if (cursor != null) {
-                cursor.close()
-            }
+            cursor?.close()
         }
     }
 
-
+    //Main function for appro creation. Also uses appro helper so that the code isn't too long
+    //This function first uploads the appro image to the server then waits for the response. Response contains the uri for the uploaded
+    //Imaage and is then passed to the appro helper function
     private fun createAppro(selectedBars: List<Bar>){
         val image = arguments?.getString("IMAGEURI")
         val barIds: MutableList<Int> = ArrayList()
         selectedBars.forEach { barIds.add(it.id!!)}
-        val file=  c.contentResolver.openInputStream(Uri.parse(image))
         val uri = Uri.parse(image)
         val real = getRealPathFromURI(c,uri)
-        Log.d("DBG",real)
+        Log.d("DBG",real!!)
         doAsync {
             Fuel.upload("http://foxer153.asuscomm.com:3001/upload",Method.POST)
                 .add(FileDataPart(File(real),name = "photo"))
@@ -123,14 +122,7 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
                 }
         }
     }
-
-    private fun makeToast(text: String){
-        val text = text
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context,text,duration)
-        toast.show()
-    }
-
+    //Finishes up appro creation by sending all the rest of the data to the backend
     private fun approHelper(imageUri: String,bars:MutableList<Int>){
         val name = arguments?.getString("NAME")
         val desc = arguments?.getString("DESC")
@@ -143,25 +135,37 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
             Fuel.post("http://foxer153.asuscomm.com:3001/createAppro")
                 .jsonBody("{\"name\":\"${name}\", \"desc\":\"${desc}\", \"price\":$price, \"location\":\"${location}\", \"image\":\"${imageUri}\",\"time\":\"${time}\", \"date\":\"${date}\",\"bars\": $bars  }")
                 .response { result ->
-
                     val (bytes, error) = result
-                    val responseJson = JSONObject(String(bytes!!))
-                    val response = responseJson.getString("response")
-                    val exists = responseJson.getBoolean("exists")
-                    Log.d("DBG", response)
-                    Log.d("DBG", exists.toString())
-                    uiThread {
-                        if (!exists){
-                            makeToast(getString(R.string.approCreated))
-                            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container,homef)?.commit()
-                        } else{
-                            makeToast(getString(R.string.approNotCreated))
+                    if (bytes != null) {
+                        val responseJson = JSONObject(String(bytes))
+                        val response = responseJson.getString("response")
+                        val exists = responseJson.getBoolean("exists")
+                        Log.d("DBG", response)
+                        Log.d("DBG", exists.toString())
+                        uiThread {
+                            if (!exists) {
+                                makeToast(getString(R.string.approCreated))
+                                activity?.supportFragmentManager?.beginTransaction()
+                                    ?.replace(R.id.container, homef)?.commit()
+                            } else {
+                                makeToast(getString(R.string.approNotCreated))
+                            }
                         }
+                    } else {
+                        Log.d("DBG", error.toString())
                     }
                 }
         }
     }
 
+    //Creates a toast with the given text
+    private fun makeToast(text: String){
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context, text,duration)
+        toast.show()
+    }
+
+    //Builds the alert which confirms that the user wants to create the appro with the selected bars
     private fun buildAlert(ctx: Context,bars: List<Bar>){
         val builder = AlertDialog.Builder(ctx)
         builder.setTitle(R.string.create)
@@ -171,12 +175,10 @@ class CreateApproBarsFragment(ctx: Context) : Fragment(){
         val formattedArray = barString.toString().replace("[","").replace("]","")
         Log.d("DBG","Bar String: $formattedArray")
         builder.setMessage(getString(R.string.aboutToCreate) + " " +  formattedArray)
-        builder.setPositiveButton("Ok"){ dialog, which -> createAppro(selectedBars) }
-        builder.setNegativeButton(R.string.cancel){dialog, which -> Log.d("DBG","Cancelled creation") }
+        builder.setPositiveButton("Ok"){ _, _ -> createAppro(selectedBars) }
+        builder.setNegativeButton(R.string.cancel){_, _ -> Log.d("DBG","Cancelled creation") }
         val alert: AlertDialog = builder.create()
         alert.setCancelable(true)
         alert.show()
     }
-
-
 }
