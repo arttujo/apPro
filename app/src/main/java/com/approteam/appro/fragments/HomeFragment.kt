@@ -9,18 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
+import com.approteam.appro.adapters.HomeViewAdapter
 import com.approteam.appro.data_models.Appro
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.*
-import kotlinx.android.synthetic.main.appro_fragment.*
 import kotlinx.android.synthetic.main.home_fragment.*
-import kotlinx.android.synthetic.main.home_list_item.*
-import kotlinx.android.synthetic.main.home_list_item.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.Exception
@@ -51,6 +47,7 @@ class HomeFragment(ctx: Context) : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //Fetches appros from the server
         doAsync {
             Fuel.get("http://foxer153.asuscomm.com:3001/test")
                 .response { _, _, result ->
@@ -79,7 +76,7 @@ class HomeFragment(ctx: Context) : Fragment() {
           buildAlert(c)
         }
     }
-
+    //Removes the appro from shared preferences
     private fun removeAppro(){
         val mPrefs: SharedPreferences = c.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
         val editor = mPrefs.edit()
@@ -90,28 +87,20 @@ class HomeFragment(ctx: Context) : Fragment() {
             activity?.supportFragmentManager?.beginTransaction()?.detach(this)!!.attach(this).commit()
         }
     }
-
-    private fun setCurrApproText(){
-        val currAppro = getCurrentApproData(c)
-        if (currAppro != DEF_APPRO_VALUE) {
-            val appro = Gson().fromJson(currAppro,Appro::class.java)
-
-        }
-    }
-
+    //Returns json string for the current appro the user is a part of
     private fun getCurrentApproData(ctx: Context):String{
         val mPrefs = ctx.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
         val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
         Log.d("DBG", "GOT APPRO: $approJsonString")
         return approJsonString!!
     }
-
+    //Alerts the user when they are about to leave an appro
     private fun buildAlert(ctx: Context){
         val builder = AlertDialog.Builder(ctx)
         builder.setTitle(R.string.approLeaveWarn)
         builder.setMessage(R.string.approLeaveMessage)
-        builder.setPositiveButton("Ok"){ dialog, which -> removeAppro() }
-        builder.setNegativeButton(R.string.cancel){dialog, which -> Log.d("DBG","Cancelled leave") }
+        builder.setPositiveButton("Ok"){ _, _ -> removeAppro() }
+        builder.setNegativeButton(R.string.cancel){_, _ -> Log.d("DBG","Cancelled leave") }
         val alert: AlertDialog = builder.create()
         alert.setCancelable(true)
         alert.show()

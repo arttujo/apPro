@@ -15,7 +15,7 @@ import com.approteam.appro.fragments.*
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 
-
+//Interface for sending location updates to parts where they are needed
 interface LocationListener {
     fun onLocationResults(lat: Double, lon: Double) {
         Log.d("DBG", "Location received")
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-
+    //Asks for storage permissions. Used in appro creation
     private fun verifyStoragePermissions(activity: Activity?) { // Check if we have write permission
         val permission = ActivityCompat.checkSelfPermission(
             activity!!,

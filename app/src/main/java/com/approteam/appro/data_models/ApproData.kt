@@ -1,6 +1,5 @@
 package com.approteam.appro.data_models
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

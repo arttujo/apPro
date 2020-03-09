@@ -38,7 +38,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         return inflater.inflate(R.layout.createappro_fragment, container, false)
     }
-
+    //Adds listeners to the input fields
     private fun addListeners() {
         priceField!!.addTextChangedListener(textWatcher)
         approLocation!!.addTextChangedListener(textWatcher)
@@ -46,7 +46,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         approTime!!.addTextChangedListener(textWatcher)
         editApproName!!.addTextChangedListener(textWatcher)
     }
-
+    //Setups the bundle
     private fun setupBundle() {
         val bundle = Bundle()
         bundle.putByteArray("IMAGEDATA", imageData)

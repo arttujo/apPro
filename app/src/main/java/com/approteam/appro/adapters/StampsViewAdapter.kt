@@ -4,8 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.approteam.appro.data_models.Appro
 import com.approteam.appro.R
@@ -27,9 +25,6 @@ class StampsViewAdapter(val data: List<Appro.ApproBar>, val ctx: Context, val li
 
 
 }
-
-
-
 
 class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
     fun bind(ctx: Context, item: Appro.ApproBar, listener: (Appro.ApproBar) -> Unit)= with(itemView){
