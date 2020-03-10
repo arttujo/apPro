@@ -32,4 +32,5 @@
     <string name="approCreated">Appro luotu!</string>
     <string name="approNotCreated">Kyseinen appro on jo olemassa!</string>
     <string name="totalBars">Baarien määrä:</string>
+    <string name="noData">Ei Dataa</string>
 </resources>

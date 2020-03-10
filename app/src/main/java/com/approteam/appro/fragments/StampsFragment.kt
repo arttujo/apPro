@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.approteam.appro.DEF_APPRO_VALUE
+import com.approteam.appro.LocationListener
 import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
 import com.approteam.appro.adapters.StampsViewAdapter
@@ -100,6 +101,7 @@ class StampsFragment(ctx: Context) : Fragment() {
         Log.d("DBG", "GOT APPRO: $approJsonString")
         return approJsonString!!
     }
+
 
     private fun applyStamp(barVisited: String) {
         val mPrefs: SharedPreferences = c.getSharedPreferences(PREF_APPRO, Context.MODE_PRIVATE)

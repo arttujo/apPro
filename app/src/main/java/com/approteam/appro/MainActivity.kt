@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this)
     private val stampsFragment = StampsFragment(this)
 
+
     //Location
     private val LOCATION_REQUEST_CODE = 101
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.container, homeFragment).commit()
         bottom_navigation.selectedItemId = R.id.navigation_home
         activityCallback = mapFragment
+        activityCallback = scanFragment
         onLocationResults(this)
         bottomNavListener()
 

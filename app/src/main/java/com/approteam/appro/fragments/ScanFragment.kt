@@ -1,40 +1,39 @@
 package com.approteam.appro.fragments
 
-import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
-import android.os.Handler
-import android.os.Parcel
-import android.os.Parcelable
-import android.renderscript.Sampler
 import android.util.Log
 import android.util.SparseArray
 import android.view.*
-import android.view.animation.Animation
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import com.approteam.appro.MainActivity
+import com.approteam.appro.DEF_APPRO_VALUE
+import com.approteam.appro.LocationListener
+import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
+import com.approteam.appro.data_models.Appro
+import com.approteam.appro.data_models.Bar
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
+import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.json.JSONObject
 
-class ScanFragment(ctx: Context) : Fragment() {
+class ScanFragment(ctx: Context) : Fragment(),LocationListener {
 
     private lateinit var detector: BarcodeDetector
     private lateinit var imageScanView: SurfaceView
@@ -46,7 +45,9 @@ class ScanFragment(ctx: Context) : Fragment() {
     private var c = ctx
     private val CAMERA_REQUEST_CODE = 200
     private val stampsFragment = StampsFragment(c)
-
+    private var latitude: Double? = null
+    private var longitude: Double? = null
+    private var MAX_DISTANCE_TO_BAR = 50.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -175,6 +176,41 @@ class ScanFragment(ctx: Context) : Fragment() {
         }
     }
 
+    private fun getApproFromPrefs():String{
+        val mPrefs = c.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
+        val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
+        return approJsonString!!
+    }
+
+    // Function to check if the user is near the bar. returns true if so, False otherwise
+    private fun checkIfNear(bar: String):Float{
+        val appro = Gson().fromJson(getApproFromPrefs(),Appro::class.java)
+        val approBars = appro.bars
+        val bar = approBars!!.filter { s -> s.name == bar }
+        Log.d("DBG","LAT AND LONG IN SCAN: $latitude $longitude")
+        val barLat = bar[0].latitude
+        val barLon = bar[0].longitude
+        Log.d("DBG","BAR LON AND LAT: $barLon $barLat")
+        val loc1 = Location("Bar")
+        val loc2 = Location("Self")
+        loc1!!.longitude = barLon!!
+        loc1.latitude = barLat!!
+        loc2!!.latitude = latitude!!
+        loc2.longitude = longitude!!
+        val distance = loc1.distanceTo(loc2)
+        Log.d("DBG", distance.toString())
+        return distance
+    }
+
+
+
+    override fun onLocationResults(lat: Double, lon: Double) {
+        Log.d("DBG", "Location received in Scan")
+        longitude = lon
+        latitude = lat
+
+    }
+
     // Returns a value from QR-code (barcode)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -182,17 +218,27 @@ class ScanFragment(ctx: Context) : Fragment() {
             if (resultCode == 666) {
                 if (data != null) {
                     val barcode = data.getStringExtra("barcode")
-                    scanBlinkEffectDisable()
-                    tV.text = getString(R.string.QR_code_found)
-                    Log.d("DBG, QRSCAN", barcode)
-                    val bundle = Bundle()
-                    bundle.putString("qrcode", barcode)
-                    stampsFragment.arguments = bundle
-                    activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)
-                        ?.replace(R.id.container, stampsFragment)?.commit()
-
+                    //TODO Check if near bar
+                    val distance = checkIfNear(barcode)
+                    if(distance<MAX_DISTANCE_TO_BAR) {
+                        scanBlinkEffectDisable()
+                        tV.text = getString(R.string.QR_code_found)
+                        Log.d("DBG, QRSCAN", barcode)
+                        val bundle = Bundle()
+                        bundle.putString("qrcode", barcode)
+                        stampsFragment.arguments = bundle
+                        activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(
+                            android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right,
+                            android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right
+                        )?.addToBackStack(null)
+                            ?.replace(R.id.container, stampsFragment)?.commit()
+                    } else {
+                        Log.d("DBG","Distance too far")
+                    }
                 } else {
-                    tV.text = "No data"
+                    tV.text = getString(R.string.noData)
                 }
             }
         }
