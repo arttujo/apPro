@@ -38,6 +38,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         return inflater.inflate(R.layout.createappro_fragment, container, false)
     }
+
     //Adds listeners to the input fields
     private fun addListeners() {
         priceField!!.addTextChangedListener(textWatcher)
@@ -46,6 +47,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         approTime!!.addTextChangedListener(textWatcher)
         editApproName!!.addTextChangedListener(textWatcher)
     }
+
     //Setups the bundle
     private fun setupBundle() {
         val bundle = Bundle()
@@ -80,6 +82,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         selectImageBtn.setOnClickListener {
             launchGallery()
         }
+        // Date picker when creating appro
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -108,6 +111,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         }
     }
+
     //Listens to the the input fields. used to check if the fields are empty or not
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(
@@ -129,6 +133,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         override fun afterTextChanged(s: Editable) {}
     }
+
     //Checks if the form is filled up correctly
     private fun checkForm() {
         val priceInput = priceField!!.text.toString().trim { it <= ' ' }

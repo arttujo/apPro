@@ -14,8 +14,10 @@ import com.approteam.appro.*
 import com.approteam.appro.data_models.Appro
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.appro_fragment.*
-
+import java.lang.Exception
+import java.lang.RuntimeException
 
 
 class ApproFragment(ctx: Context) : Fragment() {
@@ -23,8 +25,8 @@ class ApproFragment(ctx: Context) : Fragment() {
     private val c = ctx
     private val picasso = Picasso.get()
     private val barListFragment = BarListFragment(c)
-    private var approJsonString:String? = null
-
+    private var approJsonString: String? = null
+    private var listener: ApproStatusListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +34,7 @@ class ApproFragment(ctx: Context) : Fragment() {
         savedInstanceState: Bundle?
     ):
             View? {
+
         return inflater.inflate(R.layout.appro_fragment, container, false)
 
     }
@@ -41,8 +44,6 @@ class ApproFragment(ctx: Context) : Fragment() {
         cardImageAp.transitionName = arguments?.getString("approPic")
         cardTitleAp.transitionName = arguments?.getString("approName")
         cardDescAp.transitionName = arguments?.getString("approDesc")
-
-
         cardTitleAp.text = arguments?.getString("approName")
         val imageItem = arguments?.getString("approPic")
         cardDescAp.text = arguments?.getString("approDesc")
@@ -52,22 +53,34 @@ class ApproFragment(ctx: Context) : Fragment() {
         Log.d("DBG", "received: $json")
         buttonDisable(json!!)
         btnShowBars.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
+            activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(
+                android.R.anim.slide_in_left,
+                android.R.anim.slide_out_right,
+                android.R.anim.slide_in_left,
+                android.R.anim.slide_out_right
+            )?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
         }
         btnJoinAppro.setOnClickListener {
-            if (!checkCurrentApproEquals(json)){ //If the appro isn't the same appro as in the preferences user will be alerted.
-                buildAlert(c,json)
+            if (!checkCurrentApproEquals(json)) { //If the appro isn't the same appro as in the preferences user will be alerted.
+                buildAlert(c, json)
             } else {
                 approToSharedPrefs(arguments?.getString("approJson")!!)
                 val homeFragment = HomeFragment(c)
-                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container,homeFragment)?.commit()
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.container, homeFragment)?.commit()
             }
         }
-
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = context as ApproStatusListener
+    }
+
+
     //Disables the join button if the user is already in the selected appro
-    private fun buttonDisable(approFromBundle: String){
-        val currApro= getCurrentApproData(c)
+    private fun buttonDisable(approFromBundle: String) {
+        val currApro = getCurrentApproData(c)
         if (currApro != DEF_APPRO_VALUE) {
             val currApproFromPrefs = Gson().fromJson(currApro, Appro::class.java)
             val currApproFromBundle = Gson().fromJson(approFromBundle, Appro::class.java)
@@ -79,11 +92,12 @@ class ApproFragment(ctx: Context) : Fragment() {
             }
         }
     }
+
     //Checks if the current appro being viewed matches the one in shared preferences
-    private fun checkCurrentApproEquals(approFromBundle: String):Boolean{
-        val currApro= getCurrentApproData(c)
+    private fun checkCurrentApproEquals(approFromBundle: String): Boolean {
+        val currApro = getCurrentApproData(c)
         var bool = true
-        if (currApro!= DEF_APPRO_VALUE) {
+        if (currApro != DEF_APPRO_VALUE) {
             val currApproFromPrefs = Gson().fromJson(currApro, Appro::class.java)
             val currApproFromBundle = Gson().fromJson(approFromBundle, Appro::class.java)
             if (currApproFromBundle.name == currApproFromPrefs.name) {
@@ -96,48 +110,61 @@ class ApproFragment(ctx: Context) : Fragment() {
         }
         return bool
     }
+
     //Alerts the user when they are about to join a new Appro when the old one is active
-    private fun buildAlert(ctx: Context,approString:String){
+    private fun buildAlert(ctx: Context, approString: String) {
         val builder = AlertDialog.Builder(ctx)
         builder.setTitle(R.string.approReplacementWarn)
         builder.setMessage(R.string.approReplacementMessage)
-        builder.setPositiveButton("Ok"){ _, _ -> approToSharedPrefs(approString) }
-        builder.setNegativeButton(R.string.cancel){_, _ -> Log.d("DBG","Cancelled replacement") }
+        builder.setPositiveButton("Ok") { _, _ -> approToSharedPrefs(approString) }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> Log.d("DBG", "Cancelled replacement") }
         val alert: AlertDialog = builder.create()
         alert.setCancelable(true)
         alert.show()
     }
 
-    private fun setupBundle(){
+    private fun setupBundle() {
         val approJsonString = arguments?.getString("approJson")
         val bundle = Bundle()
-        bundle.putString("approJson",approJsonString)
+        bundle.putString("approJson", approJsonString)
         barListFragment.arguments = bundle
     }
+
     //Puts Appro json string into shared prefs
-    private fun approToSharedPrefs(approString:String){
-        val mPrefs: SharedPreferences = c.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
+    private fun approToSharedPrefs(approString: String) {
+        val mPrefs: SharedPreferences = c.getSharedPreferences(PREF_APPRO, Context.MODE_PRIVATE)
         val editor = mPrefs.edit()
-        approJsonString = mPrefs.getString(PREF_APPRO,null)
-        if (approJsonString == null){
-            editor.putString(PREF_APPRO,approString)
+        approJsonString = mPrefs.getString(PREF_APPRO, null)
+        if (approJsonString == null) {
+            editor.putString(PREF_APPRO, approString)
             editor.apply()
             makeToast("Joined Appro")
-        } else if (approJsonString != null){
-            editor.putString(PREF_APPRO,approString)
+            approJoined()
+        } else if (approJsonString != null) {
+            editor.putString(PREF_APPRO, approString)
             editor.apply()
             makeToast("Replaced Appro")
+            approJoined()
+
         }
+
     }
+    // Listener for navigation menu buttons (1 or 4 visible at a time)
+    private fun approJoined() {
+        listener?.onApproUpdate(true)
+
+    }
+
     //Makes a tost with the given text
-    private fun makeToast(text: String){
+    private fun makeToast(text: String) {
         val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context,text,duration)
+        val toast = Toast.makeText(context, text, duration)
         toast.show()
     }
+
     //Returns current appro data
-    private fun getCurrentApproData(ctx: Context):String{
-        val mPrefs = ctx.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
+    private fun getCurrentApproData(ctx: Context): String {
+        val mPrefs = ctx.getSharedPreferences(PREF_APPRO, Context.MODE_PRIVATE)
         val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
         Log.d("DBG", "GOT APPRO: $approJsonString")
         return approJsonString!!

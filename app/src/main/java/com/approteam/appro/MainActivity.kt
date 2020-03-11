@@ -3,6 +3,7 @@ package com.approteam.appro
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +12,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.viewpager.widget.ViewPager
+import androidx.core.view.get
 import com.approteam.appro.fragments.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.jsonBody
@@ -27,15 +28,25 @@ interface LocationListener {
     }
 }
 
+interface ApproStatusListener {
+    fun onApproUpdate(enabled: Boolean) {
+        if (enabled) {
+            Log.d("DBG", "appro active")
+        } else {
+            Log.d("DBG", "appro not active")
+        }
+    }
+
+}
+
+
 const val PREF_APPRO = "PREF_APPRO"
 const val DEF_APPRO_VALUE = "NULL"
 const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ApproStatusListener {
 
-    private var uniqueID:String?= null
-
-
+    private var uniqueID: String? = null
     private val READ_STORAGE_CODE = 29
     var activityCallback: LocationListener? = null
 
@@ -50,7 +61,6 @@ class MainActivity : AppCompatActivity() {
     private val LOCATION_REQUEST_CODE = 101
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
-    private lateinit var viewPager: ViewPager
 
     private var requestingLocationUpdates = false
     private var locationRequest = LocationRequest.create()?.apply {
@@ -62,37 +72,33 @@ class MainActivity : AppCompatActivity() {
 
     private var latitude: Double? = null
     private var longitude: Double? = null
-
     private val handler: Handler = Handler()
-
 
     // Used to send location data to the server
     private val runnable: Runnable = object : Runnable {
         override fun run() { // The method you want to call every now and then.
             Log.d("DBG", "SENDING LOC DATA")
-            sendLocationData(applicationContext,latitude!!,longitude!!)
-            handler.postDelayed(this, 5000) // 2000 = 2 seconds. This time is in millis.
+            sendLocationData(applicationContext, latitude!!, longitude!!)
+            handler.postDelayed(this, 30000) // 30000 = 30 seconds. This time is in millis.
         }
     }
 
-    private fun sendLocationData(ctx: Context,lat:Double,lon:Double){
+    private fun sendLocationData(ctx: Context, lat: Double, lon: Double) {
         Fuel.post("http://foxer153.asuscomm.com:3001/updateUserLocation")
             .jsonBody("{\"name\":\"${getUUID(ctx)}\", \"lat\":\"${lat}\", \"lon\":\"${lon}\"}")
             .response { result ->
-                val (bytes,error) = result
-                if (bytes != null){
+                val (bytes, error) = result
+                if (bytes != null) {
                     Log.d("DBG", String(bytes))
                 }
             }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createUUID(this)
         uuidToDB()
-        handler.postDelayed(runnable,2000)
+        handler.postDelayed(runnable, 2000)
         verifyStoragePermissions(this)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
@@ -110,39 +116,60 @@ class MainActivity : AppCompatActivity() {
 
     //creates a listener for the bottom navigation buttons
     private fun bottomNavListener() {
-        bottom_navigation.setOnNavigationItemSelectedListener { menuitem ->
-            when (menuitem.itemId) {
+        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.navigation_home -> {
                     Log.d("DBG", "Home clicked")
-                    supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, homeFragment)
                         .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_map -> {
                     Log.d("DBG", "Map clicked")
-                    supportFragmentManager.beginTransaction().replace(R.id.container, mapFragment)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, mapFragment)
                         .commit()
 
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_scan -> {
                     Log.d("DBG", "Scan Clicked")
-                    supportFragmentManager.beginTransaction().replace(R.id.container, scanFragment)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, scanFragment)
                         .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.naigation_stamps -> {
+                R.id.navigation_stamps -> {
                     Log.d("DBG", "Stamps Selected")
-                    supportFragmentManager.beginTransaction().replace(R.id.container,stampsFragment).commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, stampsFragment).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
+
             false
         }
     }
 
-
+    override fun onApproUpdate(enabled: Boolean) {
+        if (enabled) {
+            // Appro exists -> SHOW EVERY BUTTON
+            bottom_navigation.menu.getItem(0).isVisible = true
+            bottom_navigation.menu.getItem(1).isVisible = true
+            bottom_navigation.menu.getItem(2).isVisible = true
+            bottom_navigation.menu.getItem(3).isVisible = true
+            Log.d("DBG approupdate", "Enabled")
+        } else {
+            // No current appro -> HIDE EVERYTHING ELSE EXCEPT HOME SCREEN
+            bottom_navigation.menu.getItem(0).isVisible = false
+            bottom_navigation.menu.getItem(1).isVisible = true
+            bottom_navigation.menu.getItem(2).isVisible = false
+            bottom_navigation.menu.getItem(3).isVisible = false
+            Log.d("DBG Approupdate", "Disabled")
+        }
+    }
 
     //Handles Location results.
     private fun onLocationResults(ctx: Context) {
@@ -196,6 +223,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
+
     //Asks for storage permissions. Used in appro creation
     private fun verifyStoragePermissions(activity: Activity?) { // Check if we have write permission
         val permission = ActivityCompat.checkSelfPermission(
@@ -232,7 +260,8 @@ class MainActivity : AppCompatActivity() {
                 // location.
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), LOCATION_REQUEST_CODE
+                    arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                    LOCATION_REQUEST_CODE
 
                 )
             }
@@ -251,35 +280,36 @@ class MainActivity : AppCompatActivity() {
 
     // Creates an Unique Identifier for the app user
     // Will stay the same until user reinstalls the app
-    private fun createUUID(ctx:Context){
-        if(uniqueID == null){
-            val sharedPrefs: SharedPreferences = ctx.getSharedPreferences(PREF_UNIQUE_ID,Context.MODE_PRIVATE)
-            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID,null)
-            if (uniqueID==null){
+    private fun createUUID(ctx: Context) {
+        if (uniqueID == null) {
+            val sharedPrefs: SharedPreferences =
+                ctx.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE)
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null)
+            if (uniqueID == null) {
                 uniqueID = UUID.randomUUID().toString()
                 val editor = sharedPrefs.edit()
-                editor.putString(PREF_UNIQUE_ID,uniqueID)
+                editor.putString(PREF_UNIQUE_ID, uniqueID)
                 editor.apply()
             }
         }
     }
 
     // Returns UUID from shared prefs
-    private fun getUUID(ctx:Context):String{
-        val sharedPref = ctx.getSharedPreferences(PREF_UNIQUE_ID,Context.MODE_PRIVATE)
-        val uuid = sharedPref.getString(PREF_UNIQUE_ID,null)
+    private fun getUUID(ctx: Context): String {
+        val sharedPref = ctx.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE)
+        val uuid = sharedPref.getString(PREF_UNIQUE_ID, null)
         return uuid!!
     }
 
-    private fun uuidToDB(){
+    private fun uuidToDB() {
         Fuel.post("http://foxer153.asuscomm.com:3001/newUser")
             .jsonBody("{\"name\":\"${getUUID(this)}\"}")
             .response { result ->
-                val (bytes,error) = result
-                if (bytes != null){
+                val (bytes, error) = result
+                if (bytes != null) {
                     val responseJson = JSONObject(String(bytes))
                     val created = responseJson.getBoolean("playerCreated")
-                    if (created){
+                    if (created) {
                         Log.d("DBG", "USER SAVED IN DB")
                     }
                 }
