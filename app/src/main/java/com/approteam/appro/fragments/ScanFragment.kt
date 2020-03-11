@@ -28,6 +28,7 @@ import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
+@Suppress("NAME_SHADOWING")
 class ScanFragment(ctx: Context) : Fragment(),LocationListener {
 
     private lateinit var detector: BarcodeDetector
@@ -36,7 +37,7 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
     private lateinit var barCodes: SparseArray<Barcode>
     private lateinit var tV: TextView
     private lateinit var blinkAnimation: ObjectAnimator
-    var cameraEnabled = false
+    private var cameraEnabled = false
     private var c = ctx
     private val CAMERA_REQUEST_CODE = 200
     private val stampsFragment = StampsFragment(c)
@@ -140,7 +141,7 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_REQUEST_CODE) {
-            handlePermissionResult(permissions, grantResults)
+            handlePermissionResult(grantResults)
             Log.d("DBG", "camera permission approved right now")
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -148,7 +149,7 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
     }
 
     // Handle camera permissions
-    private fun handlePermissionResult(permissions: Array<out String>, grantResults: IntArray) {
+    private fun handlePermissionResult(grantResults: IntArray) {
         val denied =
             grantResults.indices.filter { grantResults[it] != PackageManager.PERMISSION_GRANTED }
         if (denied.isEmpty()) {
@@ -188,9 +189,9 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
         Log.d("DBG","BAR LON AND LAT: $barLon $barLat")
         val loc1 = Location("Bar")
         val loc2 = Location("Self")
-        loc1!!.longitude = barLon!!
+        loc1.longitude = barLon!!
         loc1.latitude = barLat!!
-        loc2!!.latitude = latitude!!
+        loc2.latitude = latitude!!
         loc2.longitude = longitude!!
         val distance = loc1.distanceTo(loc2)
         Log.d("DBG", distance.toString())
@@ -214,7 +215,7 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
                 if (data != null) {
                     val barcode = data.getStringExtra("barcode")
                     //TODO Check if near bar
-                    val distance = checkIfNear(barcode)
+                    val distance = checkIfNear(barcode!!)
                     if(distance<MAX_DISTANCE_TO_BAR) {
                         scanBlinkEffectDisable()
                         tV.text = getString(R.string.QR_code_found)

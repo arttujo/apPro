@@ -91,7 +91,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 c,
                 DatePickerDialog.OnDateSetListener
-                { view, year, month, day ->
+                { _, year, month, day ->
                     val monthFix = month + 1
                     date = "$year-$monthFix-$day"
                     checkForm()

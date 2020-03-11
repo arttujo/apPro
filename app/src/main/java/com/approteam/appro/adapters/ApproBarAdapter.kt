@@ -23,7 +23,7 @@ class ApproBarAdapter(
     }
 
     override fun onBindViewHolder(holder: ApproBarViewHolder, position: Int) {
-        holder.bind(ctx, position, data[position], listener)
+        holder.bind(data[position], listener)
 
     }
 
@@ -42,7 +42,11 @@ class ApproBarAdapter(
 
 
 class ApproBarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(ctx: Context, pos: Int, item: Appro.ApproBar, listener: (Appro.ApproBar) -> Unit) =
+    fun bind(
+        //ctx: Context,
+        //pos: Int,
+        item: Appro.ApproBar,
+        listener: (Appro.ApproBar) -> Unit) =
         with(itemView) {
             barNameLabel.text = item.name
             barAddressLabel.text = item.address

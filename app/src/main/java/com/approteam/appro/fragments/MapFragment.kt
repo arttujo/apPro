@@ -23,8 +23,8 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
     private var c = ctx
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
-    var mapInitialized = false
-    var currentLocation = LatLng(60.19, 24.94)
+    private var mapInitialized = false
+    private var currentLocation = LatLng(60.19, 24.94)
     private lateinit var coords: MutableList<LatLng>
     private lateinit var bars: List<Appro.ApproBar>
 

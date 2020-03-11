@@ -1,6 +1,8 @@
 package com.approteam.appro
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,10 +11,15 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
+import androidx.core.view.isEmpty
 import com.approteam.appro.fragments.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.jsonBody
@@ -73,6 +80,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
     private var latitude: Double? = null
     private var longitude: Double? = null
     private val handler: Handler = Handler()
+    private var listener: ApproStatusListener? = null
 
     // Used to send location data to the server
     private val runnable: Runnable = object : Runnable {
@@ -90,7 +98,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         Fuel.post("http://foxer153.asuscomm.com:3001/updateUserLocation")
             .jsonBody("{\"name\":\"${getUUID(ctx)}\", \"lat\":\"${lat}\", \"lon\":\"${lon}\"}")
             .response { result ->
-                val (bytes, error) = result
+                val (bytes, _) = result
                 if (bytes != null) {
                     Log.d("DBG", String(bytes))
                 }
@@ -111,8 +119,15 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         bottom_navigation.selectedItemId = R.id.navigation_home
         activityCallback = mapFragment
         activityCallback = scanFragment
-        onLocationResults(this)
+        onLocationResults()
         bottomNavListener()
+        listener = this
+        val approJson = getCurrentApproData(this)
+        if (approJson == "NULL") {
+            listener?.onApproUpdate(false)
+        } else {
+            listener?.onApproUpdate(true)
+        }
         // Viewpager adapter set
 
     }
@@ -157,25 +172,39 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
     }
 
     override fun onApproUpdate(enabled: Boolean) {
+        val layout: ConstraintLayout = findViewById(R.id.mainLayout)
+        val params: ViewGroup.LayoutParams = layout.layoutParams
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val enabledHeight = displayMetrics.heightPixels
+        val disabledHeight = displayMetrics.heightPixels + bottom_navigation.height
+        Log.d("params, height", params.height.toString())
+        Log.d("params, eheight", enabledHeight.toString())
+        Log.d("params, dheight", disabledHeight.toString())
+
         if (enabled) {
             // Appro exists -> SHOW EVERY BUTTON
-            bottom_navigation.menu.getItem(0).isVisible = true
-            bottom_navigation.menu.getItem(1).isVisible = true
-            bottom_navigation.menu.getItem(2).isVisible = true
-            bottom_navigation.menu.getItem(3).isVisible = true
+            bottom_navigation.visibility = View.VISIBLE
+            bottom_navigation
+                .animate()
+                .translationY(0.toFloat())
+                .alpha(1.0f)
+            params.height = enabledHeight
             Log.d("DBG approupdate", "Enabled")
         } else {
             // No current appro -> HIDE EVERYTHING ELSE EXCEPT HOME SCREEN
-            bottom_navigation.menu.getItem(0).isVisible = false
-            bottom_navigation.menu.getItem(1).isVisible = true
-            bottom_navigation.menu.getItem(2).isVisible = false
-            bottom_navigation.menu.getItem(3).isVisible = false
+            bottom_navigation
+                .animate()
+                .translationY(bottom_navigation.height.toFloat())
+                .alpha(0.0f)
+            params.height = disabledHeight
+
             Log.d("DBG Approupdate", "Disabled")
         }
     }
 
     //Handles Location results.
-    private fun onLocationResults(ctx: Context) {
+    private fun onLocationResults() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
@@ -244,6 +273,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
 
 
     //Request background and fine location perms
+    @SuppressLint("InlinedApi", "ObsoleteSdkInt")
     private fun permissionRequest() {
         val permissionAccessFineLocationApproved = ActivityCompat
             .checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -252,11 +282,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
             val backgroundLocationPermissionApproved = ActivityCompat
                 .checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) ==
                     PackageManager.PERMISSION_GRANTED
-            if (backgroundLocationPermissionApproved) {
-                // App can access location both in the foreground and in the background.
-                // Start your service that doesn't have a foreground service type
-                // defined.
-            } else {
+            if (!backgroundLocationPermissionApproved) {
                 // App can only access location in the foreground. Display a dialog
                 // warning the user that your app must have all-the-time access to
                 // location in order to function properly. Then, request background
@@ -268,6 +294,9 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
 
                 )
             }
+            // App can access location both in the foreground and in the background.
+            // Start your service that doesn't have a foreground service type
+            // defined.
         } else {
             // App doesn't have access to the device's location at all. Make full request
             // for permission.
@@ -308,7 +337,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         Fuel.post("http://foxer153.asuscomm.com:3001/newUser")
             .jsonBody("{\"name\":\"${getUUID(this)}\"}")
             .response { result ->
-                val (bytes, error) = result
+                val (bytes, _) = result
                 if (bytes != null) {
                     val responseJson = JSONObject(String(bytes))
                     val created = responseJson.getBoolean("playerCreated")
@@ -317,6 +346,12 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
                     }
                 }
             }
+    }
+    private fun getCurrentApproData(ctx: Context): String {
+        val mPrefs = ctx.getSharedPreferences(PREF_APPRO, Context.MODE_PRIVATE)
+        val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
+        Log.d("DBG", "GOT APPRO: $approJsonString")
+        return approJsonString!!
     }
 
 }
