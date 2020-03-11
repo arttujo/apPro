@@ -66,6 +66,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         barCountTV.text = "${getString(R.string.selectBars)} $barCount "
     }
 
+    // Logic that is run after googleMap is ready
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("DBG", "Map ready")
         mMap = googleMap

@@ -14,7 +14,7 @@
         />
 
     <item
-        android:id="@+id/naigation_stamps"
+        android:id="@+id/navigation_stamps"
         android:icon="@drawable/ic_grid"
         android:title="@string/stamps"
         />
