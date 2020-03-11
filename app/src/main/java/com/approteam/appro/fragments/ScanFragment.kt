@@ -3,7 +3,6 @@ package com.approteam.appro.fragments
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -20,9 +19,6 @@ import com.approteam.appro.LocationListener
 import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
 import com.approteam.appro.data_models.Appro
-import com.approteam.appro.data_models.Bar
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
@@ -31,7 +27,6 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.json.JSONObject
 
 class ScanFragment(ctx: Context) : Fragment(),LocationListener {
 
