@@ -3,7 +3,6 @@ package com.approteam.appro
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.viewpager.widget.ViewPager
 import com.approteam.appro.fragments.*
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val LOCATION_REQUEST_CODE = 101
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private lateinit var viewPager: ViewPager
 
     private var requestingLocationUpdates = false
     private var locationRequest = LocationRequest.create()?.apply {
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         activityCallback = mapFragment
         onLocationResults(this)
         bottomNavListener()
+        // Viewpager adapter set
 
     }
 
