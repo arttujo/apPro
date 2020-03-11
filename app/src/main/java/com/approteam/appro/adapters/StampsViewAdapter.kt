@@ -11,7 +11,7 @@ import com.approteam.appro.R
 import kotlinx.android.synthetic.main.stamps_list_item.view.*
 
 
-class StampsViewAdapter(val data: List<Appro.ApproBar>, val ctx: Context, val listener: (Appro.ApproBar)-> Unit):RecyclerView.Adapter<StampsViewHolder>(){
+class StampsViewAdapter(val data: List<Appro.ApproBar>, val ctx: Context, private val listener: (Appro.ApproBar)-> Unit):RecyclerView.Adapter<StampsViewHolder>(){
 
     override fun getItemCount(): Int {
         return data.size
@@ -21,13 +21,15 @@ class StampsViewAdapter(val data: List<Appro.ApproBar>, val ctx: Context, val li
         return StampsViewHolder(LayoutInflater.from(ctx).inflate(R.layout.stamps_list_item,parent,false))
     }
 
-    override fun onBindViewHolder(holder: StampsViewHolder, position: Int) = holder.bind(ctx,data[position],listener)
+    override fun onBindViewHolder(holder: StampsViewHolder, position: Int) = holder.bind(data[position],listener)
 
 
 }
 
 class StampsViewHolder(view: View):RecyclerView.ViewHolder(view){
-    fun bind(ctx: Context, item: Appro.ApproBar, listener: (Appro.ApproBar) -> Unit)= with(itemView){
+    fun bind(
+        //ctx: Context,
+        item: Appro.ApproBar, listener: (Appro.ApproBar) -> Unit)= with(itemView){
         gridItemName.text = item.name
         if (item.visited) {
             gridItemName.visibility = View.GONE

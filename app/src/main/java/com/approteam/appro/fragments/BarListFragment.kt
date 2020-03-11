@@ -63,7 +63,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
             }
         }
         val barCount = bars.size.toString()
-        barCountTV.text = "${getString(R.string.selectBars)} $barCount "
+        barCountTV.text = "${R.id.selectBars} $barCount"
     }
 
     // Logic that is run after googleMap is ready

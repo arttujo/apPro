@@ -16,12 +16,10 @@ import com.approteam.appro.adapters.HomeViewAdapter
 import com.approteam.appro.data_models.Appro
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.Exception
-import java.lang.RuntimeException
 
 
 class HomeFragment(ctx: Context) : Fragment() {
@@ -66,6 +64,7 @@ class HomeFragment(ctx: Context) : Fragment() {
             Fuel.get("http://foxer153.asuscomm.com:3001/test")
                 .response { _, _, result ->
                     val (bytes, error) = result
+                    Log.d("DBG", error.toString())
                     if (bytes != null) {
                         Log.d("DBG", "Bytes received!")
                         Log.d("DBG", String(bytes))
@@ -79,7 +78,7 @@ class HomeFragment(ctx: Context) : Fragment() {
                             } catch (error: Exception) {
                                 Log.e("homeprogressBar", error.toString())
                             }
-                            approClick(appros, String(bytes))
+                            approClick(appros)
                         }
                     }
                 }
@@ -133,7 +132,7 @@ class HomeFragment(ctx: Context) : Fragment() {
 
 
     //Click handler for opening an appro
-    private fun approClick(appros: List<Appro>, approJson: String) {
+    private fun approClick(appros: List<Appro>) {
         try {
             approListRView.adapter = HomeViewAdapter(appros, c) {
                 val bundle = Bundle()

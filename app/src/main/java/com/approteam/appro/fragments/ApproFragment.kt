@@ -14,10 +14,7 @@ import com.approteam.appro.*
 import com.approteam.appro.data_models.Appro
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.appro_fragment.*
-import java.lang.Exception
-import java.lang.RuntimeException
 
 
 class ApproFragment(ctx: Context) : Fragment() {

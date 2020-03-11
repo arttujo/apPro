@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.approteam.appro.DEF_APPRO_VALUE
-import com.approteam.appro.LocationListener
 import com.approteam.appro.PREF_APPRO
 import com.approteam.appro.R
 import com.approteam.appro.adapters.StampsViewAdapter
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.stamps_fragment.*
 
 class StampsFragment(ctx: Context) : Fragment() {
 
-    val c = ctx
+    private val c = ctx
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +52,7 @@ class StampsFragment(ctx: Context) : Fragment() {
                    when (bar.name) {
                        // When barcode found, either bar is already visited or not
                        barcode -> if (bar.visited) {
+                           Log.d("DBG, barindex", index.toString())
                            Log.d("DBG, barname", bar.name!!)
                            Log.d("DBG barcode", barcode)
                            Log.d("DBG", "Stamp already added")
