@@ -2,26 +2,16 @@ package com.approteam.appro.fragments
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.media.Image
-import android.os.Build
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.approteam.appro.*
 import com.approteam.appro.data_models.Appro
-import com.google.android.gms.vision.barcode.Barcode
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.appro_fragment.*
@@ -59,7 +49,7 @@ class ApproFragment(ctx: Context) : Fragment() {
         picasso.load(imageItem).into(cardImageAp)
         setupBundle()
         val json = arguments?.getString("approJson")
-        Log.d("DBG","received: "+json)
+        Log.d("DBG", "received: $json")
         buttonDisable(json!!)
         btnShowBars.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right)?.addToBackStack(null)?.replace(R.id.container, barListFragment)?.commit()
@@ -111,8 +101,8 @@ class ApproFragment(ctx: Context) : Fragment() {
         val builder = AlertDialog.Builder(ctx)
         builder.setTitle(R.string.approReplacementWarn)
         builder.setMessage(R.string.approReplacementMessage)
-        builder.setPositiveButton("Ok"){ dialog, which -> approToSharedPrefs(approString) }
-        builder.setNegativeButton(R.string.cancel){dialog, which -> Log.d("DBG","Cancelled replacement") }
+        builder.setPositiveButton("Ok"){ _, _ -> approToSharedPrefs(approString) }
+        builder.setNegativeButton(R.string.cancel){_, _ -> Log.d("DBG","Cancelled replacement") }
         val alert: AlertDialog = builder.create()
         alert.setCancelable(true)
         alert.show()
@@ -139,29 +129,17 @@ class ApproFragment(ctx: Context) : Fragment() {
             makeToast("Replaced Appro")
         }
     }
-
+    //Makes a tost with the given text
     private fun makeToast(text: String){
-        val text = text
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(context,text,duration)
         toast.show()
     }
-
+    //Returns current appro data
     private fun getCurrentApproData(ctx: Context):String{
         val mPrefs = ctx.getSharedPreferences(PREF_APPRO,Context.MODE_PRIVATE)
         val approJsonString = mPrefs.getString(PREF_APPRO, DEF_APPRO_VALUE)
         Log.d("DBG", "GOT APPRO: $approJsonString")
         return approJsonString!!
-    }
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            sharedElementEnterTransition = TransitionInflater.from(c).inflateTransition(android.R.transition.slide_top)
-            Log.d("DBG","Transition")
-        }
-
     }
 }

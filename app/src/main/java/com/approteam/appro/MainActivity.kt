@@ -6,16 +6,21 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.viewpager.widget.ViewPager
 import com.approteam.appro.fragments.*
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONObject
+import java.util.*
 
-
+//Interface for sending location updates to parts where they are needed
 interface LocationListener {
     fun onLocationResults(lat: Double, lon: Double) {
         Log.d("DBG", "Location received")
@@ -24,9 +29,13 @@ interface LocationListener {
 
 const val PREF_APPRO = "PREF_APPRO"
 const val DEF_APPRO_VALUE = "NULL"
-
+const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
 
 class MainActivity : AppCompatActivity() {
+
+    private var uniqueID:String?= null
+
+
     private val READ_STORAGE_CODE = 29
     var activityCallback: LocationListener? = null
 
@@ -35,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private val scanFragment = ScanFragment(this)
     private val homeFragment = HomeFragment(this)
     private val stampsFragment = StampsFragment(this)
+
 
     //Location
     private val LOCATION_REQUEST_CODE = 101
@@ -50,8 +60,39 @@ class MainActivity : AppCompatActivity() {
         // smallestDisplacement = 3f
     }
 
+    private var latitude: Double? = null
+    private var longitude: Double? = null
+
+    private val handler: Handler = Handler()
+
+
+    // Used to send location data to the server
+    private val runnable: Runnable = object : Runnable {
+        override fun run() { // The method you want to call every now and then.
+            Log.d("DBG", "SENDING LOC DATA")
+            sendLocationData(applicationContext,latitude!!,longitude!!)
+            handler.postDelayed(this, 5000) // 2000 = 2 seconds. This time is in millis.
+        }
+    }
+
+    private fun sendLocationData(ctx: Context,lat:Double,lon:Double){
+        Fuel.post("http://foxer153.asuscomm.com:3001/updateUserLocation")
+            .jsonBody("{\"name\":\"${getUUID(ctx)}\", \"lat\":\"${lat}\", \"lon\":\"${lon}\"}")
+            .response { result ->
+                val (bytes,error) = result
+                if (bytes != null){
+                    Log.d("DBG", String(bytes))
+                }
+            }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createUUID(this)
+        uuidToDB()
+        handler.postDelayed(runnable,2000)
         verifyStoragePermissions(this)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
@@ -60,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.container, homeFragment).commit()
         bottom_navigation.selectedItemId = R.id.navigation_home
         activityCallback = mapFragment
+        activityCallback = scanFragment
         onLocationResults(this)
         bottomNavListener()
         // Viewpager adapter set
@@ -110,6 +152,8 @@ class MainActivity : AppCompatActivity() {
                 for (location in locationResult.locations) {
                     val lat = location.latitude
                     val lon = location.longitude
+                    latitude = lat
+                    longitude = lon
                     activityCallback!!.onLocationResults(lat, lon)
                     Log.d("DBG", "Lat : $lat, Lon: $lon")
                 }
@@ -152,7 +196,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-
+    //Asks for storage permissions. Used in appro creation
     private fun verifyStoragePermissions(activity: Activity?) { // Check if we have write permission
         val permission = ActivityCompat.checkSelfPermission(
             activity!!,
@@ -204,6 +248,44 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+    // Creates an Unique Identifier for the app user
+    // Will stay the same until user reinstalls the app
+    private fun createUUID(ctx:Context){
+        if(uniqueID == null){
+            val sharedPrefs: SharedPreferences = ctx.getSharedPreferences(PREF_UNIQUE_ID,Context.MODE_PRIVATE)
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID,null)
+            if (uniqueID==null){
+                uniqueID = UUID.randomUUID().toString()
+                val editor = sharedPrefs.edit()
+                editor.putString(PREF_UNIQUE_ID,uniqueID)
+                editor.apply()
+            }
+        }
+    }
+
+    // Returns UUID from shared prefs
+    private fun getUUID(ctx:Context):String{
+        val sharedPref = ctx.getSharedPreferences(PREF_UNIQUE_ID,Context.MODE_PRIVATE)
+        val uuid = sharedPref.getString(PREF_UNIQUE_ID,null)
+        return uuid!!
+    }
+
+    private fun uuidToDB(){
+        Fuel.post("http://foxer153.asuscomm.com:3001/newUser")
+            .jsonBody("{\"name\":\"${getUUID(this)}\"}")
+            .response { result ->
+                val (bytes,error) = result
+                if (bytes != null){
+                    val responseJson = JSONObject(String(bytes))
+                    val created = responseJson.getBoolean("playerCreated")
+                    if (created){
+                        Log.d("DBG", "USER SAVED IN DB")
+                    }
+                }
+            }
+    }
+
 }
 
 

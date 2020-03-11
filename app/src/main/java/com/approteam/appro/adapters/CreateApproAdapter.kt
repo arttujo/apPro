@@ -3,7 +3,6 @@ package com.approteam.appro.adapters
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,6 @@ import com.approteam.appro.R
 import kotlinx.android.synthetic.main.bar_list_item.view.*
 
 class CreateApproAdapter(private val data: List<Bar>, private val ctx: Context,private val listener: (Bar) -> Unit): RecyclerView.Adapter<CreateApproViewHolder>(){
-
-
 
     override fun getItemCount(): Int {
         return data.size
@@ -50,10 +47,6 @@ class CreateApproAdapter(private val data: List<Bar>, private val ctx: Context,p
 
 
 }
-
-
-
-
 class CreateApproViewHolder(view:View) : RecyclerView.ViewHolder(view){
 
     fun bind(ctx: Context,item: Bar,listener: (Bar) -> Unit) = with(itemView){

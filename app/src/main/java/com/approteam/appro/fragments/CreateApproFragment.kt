@@ -1,11 +1,9 @@
 package com.approteam.appro.fragments
 
-import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -15,10 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.DatePicker
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.approteam.appro.MainActivity
 import com.approteam.appro.R
 import kotlinx.android.synthetic.main.createappro_fragment.*
 import java.util.*
@@ -43,7 +38,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         return inflater.inflate(R.layout.createappro_fragment, container, false)
     }
-
+    //Adds listeners to the input fields
     private fun addListeners() {
         priceField!!.addTextChangedListener(textWatcher)
         approLocation!!.addTextChangedListener(textWatcher)
@@ -51,7 +46,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         approTime!!.addTextChangedListener(textWatcher)
         editApproName!!.addTextChangedListener(textWatcher)
     }
-
+    //Setups the bundle
     private fun setupBundle() {
         val bundle = Bundle()
         bundle.putByteArray("IMAGEDATA", imageData)
@@ -113,7 +108,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         }
     }
-
+    //Listens to the the input fields. used to check if the fields are empty or not
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(
             s: CharSequence,
@@ -134,7 +129,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         override fun afterTextChanged(s: Editable) {}
     }
-
+    //Checks if the form is filled up correctly
     private fun checkForm() {
         val priceInput = priceField!!.text.toString().trim { it <= ' ' }
         val locationInput = approLocation!!.text.toString().trim { it <= ' ' }
@@ -164,7 +159,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     //returns image data
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            var uri = data?.data
+            val uri = data?.data
 
             if (uri != null) {
                 approImage.setImageURI(uri)

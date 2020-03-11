@@ -29,7 +29,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
     private lateinit var mMap: GoogleMap
     private lateinit var bars: List<Appro.ApproBar>
     private lateinit var coords: MutableList<LatLng>
-    var mapInitialized = false
+    private var mapInitialized = false
 
 
 
@@ -62,8 +62,8 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(barLocation, 15.toFloat()))
             }
         }
-        val barCount = bars.size
-        barCountTV.text = "Total bars: $barCount"
+        val barCount = bars.size.toString()
+        barCountTV.text = "${getString(R.string.selectBars)} $barCount "
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -77,7 +77,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
         }
         centerMapAfterUpdate()
     }
-
+    //Adds markers to the map
     private fun addMarkers() {
         Log.d("DBG", "added markers")
         for (coord in bars) {
@@ -90,7 +90,7 @@ class BarListFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationLi
             )
         }
     }
-
+    //Centers the map to the average coordinate from all the bar coordinates
     private fun centerMapAfterUpdate() {
         val latSum = coords.sumByDouble { it.latitude }
         val lonSum = coords.sumByDouble { it.longitude }

@@ -1,10 +1,11 @@
-package com.approteam.appro
+package com.approteam.appro.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.approteam.appro.R
 import com.approteam.appro.data_models.Appro
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_list_item.view.*
@@ -24,12 +25,6 @@ class HomeViewAdapter(
         holder.bind(ctx, position, data[position], listener)
 
     }
-
-    fun test() {
-
-    }
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         return HomeViewHolder(
             LayoutInflater.from(ctx).inflate(
