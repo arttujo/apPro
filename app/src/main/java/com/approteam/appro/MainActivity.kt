@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         override fun run() { // The method you want to call every now and then.
             Log.d("DBG", "SENDING LOC DATA")
             sendLocationData(applicationContext, latitude!!, longitude!!)
-            handler.postDelayed(this, 30000) // 30000 = 30 seconds. This time is in millis.
+            handler.postDelayed(this, 600000) // 30000 = 30 seconds. This time is in millis.
         }
     }
 

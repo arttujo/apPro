@@ -6,7 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="Homefragment"
+    android:background="@drawable/border"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/homeInfo"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="30dp"
+        android:textSize="25sp"
+        android:gravity="center_horizontal"
+        android:text="@string/approList" />
 
 
     <Button
@@ -14,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -24,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/leave"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -32,13 +45,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/approListRView"
         android:layout_width="match_parent"
-        android:layout_height="650dp"
+        android:layout_height="540dp"
         android:layout_marginTop="16dp"
         android:scrollbars="vertical"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/homeInfo" />
 
     <ProgressBar
         android:id="@+id/homeProgressBar"
@@ -49,10 +63,6 @@
         android:layout_marginBottom="204dp"
         app:layout_constraintBottom_toBottomOf="@+id/approListRView"
         app:layout_constraintStart_toStartOf="parent" />
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

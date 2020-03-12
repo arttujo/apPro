@@ -7,73 +7,82 @@
     android:layout_height="match_parent"
     android:tag="ApproFragment"
     android:orientation="vertical"
+    android:background="@drawable/border"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
     >
 
-    <ImageView
-        android:id="@+id/cardImageAp"
-        android:layout_width="411dp"
-        android:layout_height="189dp"
-        android:layout_marginBottom="60dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/cardTitleAp"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/cardTitleAp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="25dp"
-        android:padding="8dp"
-        android:text="temporary"
-        android:textColor="@color/black"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/cardDescAp"
-        app:layout_constraintTop_toBottomOf="@+id/cardImageAp"
-        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
 
 
         />
+
+    <ImageView
+        android:contentDescription="Card Image"
+        android:id="@+id/cardImageAp"
+        android:layout_width="match_parent"
+        android:layout_height="189dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:paddingTop="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardDescAp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardTitleAp" />
 
     <TextView
         android:id="@+id/cardDescAp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="279dp"
         android:padding="8dp"
         android:text="temporary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitleAp"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/cardImageAp" />
 
-    <Button
-        android:id="@+id/btnShowBars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="40dp"
-        android:gravity="center_horizontal"
-        android:text="Show bars for this appro"
-        app:layout_constraintBottom_toTopOf="@+id/btnJoinAppro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnJoinAppro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="131dp"
-        android:layout_marginEnd="131dp"
-        android:layout_marginBottom="56dp"
-        android:text="Join this appro"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/cardDescAp"
+        >
+
+        <Button
+            android:id="@+id/btnShowBars"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/showBars"
+            app:layout_constraintBottom_toTopOf="@+id/btnJoinAppro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnJoinAppro"
+            android:layout_marginTop="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:text="@string/joinAppro"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
