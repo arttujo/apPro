@@ -45,5 +45,6 @@
     <string name="stampAdded">Stamp added for:</string>
     <string name="aboutPage">Information about this page:</string>
     <string name="aboutMessage">In this page you are able to see your current progress. Visit bars, buy drinks, and collect stamps.</string>
+    <string name="joinedAppro">Joined Appro!</string>
 
 </resources>

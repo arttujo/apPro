@@ -46,4 +46,5 @@
     <string name="stampAdded">Leima saatu:</string>
     <string name="aboutPage">Tietoa tästä sivusta:</string>
     <string name="aboutMessage">"Tältä sivulta näät kuinka monta leimaa olet hankkinut. "</string>
+    <string name="joinedAppro">Liityit Aproon!</string>
 </resources>

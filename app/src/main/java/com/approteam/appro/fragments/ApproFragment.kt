@@ -62,6 +62,7 @@ class ApproFragment(ctx: Context) : Fragment() {
         val json = arguments?.getString("approJson")
         Log.d("DBG", "received: $json")
         buttonDisable(json!!)
+
         btnShowBars.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(
                 android.R.anim.slide_in_left,
@@ -75,9 +76,6 @@ class ApproFragment(ctx: Context) : Fragment() {
                 buildAlert(c, json)
             } else {
                 approToSharedPrefs(arguments?.getString("approJson")!!)
-                val homeFragment = HomeFragment(c)
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.container, homeFragment)?.commit()
             }
         }
     }
@@ -85,6 +83,12 @@ class ApproFragment(ctx: Context) : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = context as ApproStatusListener
+    }
+
+    private fun navToHome(){
+        val homeFragment = HomeFragment(c)
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.container, homeFragment)?.commit()
     }
 
 
@@ -145,15 +149,16 @@ class ApproFragment(ctx: Context) : Fragment() {
         val mPrefs: SharedPreferences = c.getSharedPreferences(PREF_APPRO, Context.MODE_PRIVATE)
         val editor = mPrefs.edit()
         approJsonString = mPrefs.getString(PREF_APPRO, null)
+        navToHome()
         if (approJsonString == null) {
             editor.putString(PREF_APPRO, approString)
             editor.apply()
-            makeToast("Joined Appro")
+            makeToast(getString(R.string.joinedAppro))
             approJoined()
         } else if (approJsonString != null) {
             editor.putString(PREF_APPRO, approString)
             editor.apply()
-            makeToast("Replaced Appro")
+            makeToast(getString(R.string.joinedAppro))
             approJoined()
 
         }

@@ -31,7 +31,8 @@ class StampsFragment(ctx: Context) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        activity?.bottom_navigation?.menu?.findItem(R.id.navigation_stamps)?.setChecked(true)
+        // Highlights the item when navigating from scan
+        activity?.bottom_navigation?.menu?.findItem(R.id.navigation_stamps)?.isChecked = true
         return inflater.inflate(R.layout.stamps_fragment, container, false)
     }
 
