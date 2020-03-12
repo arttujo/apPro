@@ -2,6 +2,9 @@ package com.approteam.appro
 
 import android.util.Log
 
+// This file contains all the globally used stuff
+
+
 //Interface for sending location updates to parts where they are needed
 interface LocationListener {
     fun onLocationResults(lat: Double, lon: Double) {

@@ -45,12 +45,14 @@
         android:id="@+id/approListRView"
         android:layout_width="match_parent"
         android:layout_height="610dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="17dp"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/createButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeInfo" />
 

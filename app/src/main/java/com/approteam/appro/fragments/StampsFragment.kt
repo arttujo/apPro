@@ -18,6 +18,7 @@ import com.approteam.appro.R
 import com.approteam.appro.adapters.StampsViewAdapter
 import com.approteam.appro.data_models.Appro
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 
 import kotlinx.android.synthetic.main.stamps_fragment.*
 
@@ -30,6 +31,7 @@ class StampsFragment(ctx: Context) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activity?.bottom_navigation?.menu?.findItem(R.id.navigation_stamps)?.setChecked(true)
         return inflater.inflate(R.layout.stamps_fragment, container, false)
     }
 

@@ -58,8 +58,9 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
 
     // Used to loop sending data in a thread.
     private val runnable: Runnable = object : Runnable {
-        override fun run() { // The method you want to call every now and then.
+        override fun run() {
             Log.d("DBG", "SENDING LOC DATA")
+            // Inside try catch block because this might cause some nasty crashes
             try {
                 sendLocationData(applicationContext,latitude!!,longitude!!)
                 handler.postDelayed(this, 60000) // 60000 = 60 seconds. This time is in millis.

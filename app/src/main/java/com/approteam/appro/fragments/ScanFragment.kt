@@ -25,6 +25,7 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -230,6 +231,7 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
                             android.R.anim.slide_out_right
                         )?.addToBackStack(null)
                             ?.replace(R.id.container, stampsFragment)?.commit()
+
                     } else {
                         Log.d("DBG","Distance too far")
                     }
