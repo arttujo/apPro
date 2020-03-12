@@ -2,7 +2,6 @@ package com.approteam.appro
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -23,35 +22,13 @@ import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
+import java.lang.Exception
 import java.util.*
 
-//Interface for sending location updates to parts where they are needed
-interface LocationListener {
-    fun onLocationResults(lat: Double, lon: Double) {
-        Log.d("DBG", "Location received")
-    }
-}
-
-interface ApproStatusListener {
-    fun onApproUpdate(enabled: Boolean) {
-        if (enabled) {
-            Log.d("DBG", "appro active")
-        } else {
-            Log.d("DBG", "appro not active")
-        }
-    }
-
-}
-
-
-const val PREF_APPRO = "PREF_APPRO"
-const val DEF_APPRO_VALUE = "NULL"
-const val PREF_UNIQUE_ID = "PREF_UNIQUE_ID"
 
 class MainActivity : AppCompatActivity(), ApproStatusListener {
 
     private var uniqueID: String? = null
-    private val READ_STORAGE_CODE = 29
     var activityCallback: LocationListener? = null
 
     //Fragments
@@ -79,15 +56,20 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
     private val handler: Handler = Handler()
     private var listener: ApproStatusListener? = null
 
-    // Used to send location data to the server
+    // Used to loop sending data in a thread.
     private val runnable: Runnable = object : Runnable {
         override fun run() { // The method you want to call every now and then.
             Log.d("DBG", "SENDING LOC DATA")
-            sendLocationData(applicationContext,latitude!!,longitude!!)
-            handler.postDelayed(this, 600000) // 30000 = 30 seconds. This time is in millis.
+            try {
+                sendLocationData(applicationContext,latitude!!,longitude!!)
+                handler.postDelayed(this, 60000) // 60000 = 60 seconds. This time is in millis.
+            }catch (e:Exception){
+                Log.d("DBG", e.toString())
+            }
+
         }
     }
-
+    // Function to send location data to the server
     private fun sendLocationData(ctx: Context, lat: Double, lon: Double) {
         Fuel.post("http://foxer153.asuscomm.com:3001/updateUserLocation")
             .jsonBody("{\"name\":\"${getUUID(ctx)}\", \"lat\":\"${lat}\", \"lon\":\"${lon}\"}")
@@ -104,7 +86,7 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         createUUID(this)
         uuidToDB()
         handler.postDelayed(runnable, 2000)
-        verifyStoragePermissions(this)
+        //verifyStoragePermissions(this)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
         permissionRequest()
@@ -253,27 +235,6 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         Log.d("DBG", "Paused")
         stopLocationUpdates()
     }
-
-    private val PERMISSIONS_STORAGE = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
-
-    //Asks for storage permissions. Used in appro creation
-    private fun verifyStoragePermissions(activity: Activity?) { // Check if we have write permission
-        val permission = ActivityCompat.checkSelfPermission(
-            activity!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) { // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                activity,
-                PERMISSIONS_STORAGE,
-                READ_STORAGE_CODE
-            )
-        }
-    }
-
 
     //Request background and fine location perms
     @SuppressLint("InlinedApi", "ObsoleteSdkInt")

@@ -1,9 +1,11 @@
 package com.approteam.appro.fragments
 
+import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.approteam.appro.R
 import kotlinx.android.synthetic.main.createappro_fragment.*
@@ -32,6 +35,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     private var pattern: Pattern? = null
     private var matcher: Matcher? = null
     private val TIME_24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]"
+    private val STORAGE_REQUEST_CODE = 785
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,9 +47,9 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         return inflater.inflate(R.layout.createappro_fragment, container, false)
     }
 
+    // Validates if the time input matches either 16:00 / 05:00
     private fun validateTime(time: String?): Boolean {
         matcher = pattern!!.matcher(time)
-
         return matcher!!.matches()
     }
 
@@ -74,6 +78,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requestStoragePerms()
         time24HoursValidator()
         val btn = view.findViewById<Button>(R.id.cancelButton)
         val openCalbtn = view.findViewById<Button>(R.id.datePickerOpen)
@@ -198,6 +203,28 @@ class CreateApproFragment(ctx: Context) : Fragment() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    // Requests storage permissions
+    private fun requestStoragePerms() {
+        val permissionStatus =
+            ContextCompat.checkSelfPermission(c, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_REQUEST_CODE)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == STORAGE_REQUEST_CODE) {
+            Log.d("DBG", "storage permission approved right now")
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
 
