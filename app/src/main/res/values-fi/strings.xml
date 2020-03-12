@@ -40,4 +40,6 @@
     <string name="approImage">Appron kuva</string>
     <string name="pickApproDate">Valitse päivämäärä</string>
     <string name="approImageHere">Appron kuva tähän</string>
+    <string name="splashScreen">Käynnistys ruutu apin logolla</string>
+    <string name="approStamp">Leima</string>
 </resources>

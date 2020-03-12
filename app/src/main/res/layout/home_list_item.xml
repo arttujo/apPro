@@ -43,8 +43,7 @@
             android:layout_height="150dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-
-
+            android:contentDescription="@string/approImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

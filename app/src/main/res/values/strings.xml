@@ -39,4 +39,6 @@
     <string name="approImage">Appro Image</string>
     <string name="pickApproDate">Pick Appro Date</string>
     <string name="approImageHere">Appro Image goes here</string>
+    <string name="splashScreen">Splash screen with app logo</string>
+    <string name="approStamp">Stamp</string>
 </resources>
