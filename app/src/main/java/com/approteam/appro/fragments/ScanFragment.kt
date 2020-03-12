@@ -43,7 +43,7 @@ class ScanFragment(ctx: Context) : Fragment(),LocationListener {
     private val stampsFragment = StampsFragment(c)
     private var latitude: Double? = null
     private var longitude: Double? = null
-    private var MAX_DISTANCE_TO_BAR = 50.0
+    private var MAX_DISTANCE_TO_BAR = 50000.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
