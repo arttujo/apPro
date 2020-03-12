@@ -36,5 +36,5 @@
     <string name="approNotCreated">Appro with the given name already exists</string>
     <string name="totalBars">Total Bars:</string>
     <string name="noData">No Data</string>
-
+    <string name="approImage">Appro Image</string>
 </resources>

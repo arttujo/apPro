@@ -34,19 +34,6 @@ class MapFragment(ctx: Context) : Fragment(), OnMapReadyCallback, LocationListen
         savedInstanceState: Bundle?
     ): View? {
             val view = inflater.inflate(R.layout.map_fragment, container, false)
-            // Floating button for centering to user location
-            // Disable center button until first location is updated
-            // Google maps api already implements this
-            /*centerBtn.isEnabled = false
-            centerBtn.setOnClickListener {
-                // Center map to current location and zoom it
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(15.toFloat()))
-                Toast.makeText(this.context, "Centered to your location", Toast.LENGTH_SHORT)
-                    .show()
-                Log.d("DBG", "Map centered")
-            }*/
-
             mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment?.getMapAsync(this)
             return view

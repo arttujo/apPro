@@ -41,7 +41,7 @@ class HomeViewAdapter(
 //View holder for the recycler view card items
 class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val picasso = Picasso.get()
-
+    // Parses the time format received from server
     private fun dateParser(date:String): String{
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         val dateTime = LocalDateTime.parse(date,formatter)

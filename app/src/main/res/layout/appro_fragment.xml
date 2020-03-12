@@ -19,7 +19,7 @@
         android:layout_height="189dp"
         android:layout_marginTop="1dp"
         android:adjustViewBounds="true"
-        android:contentDescription="Card Image"
+        android:contentDescription="@string/approImage"
         android:paddingTop="6dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="8dp"
-            android:text="approPrice"
+            android:text = "temp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,7 +69,8 @@
             android:id="@+id/appro_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="appro_date"

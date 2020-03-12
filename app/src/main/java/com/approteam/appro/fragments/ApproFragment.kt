@@ -37,7 +37,7 @@ class ApproFragment(ctx: Context) : Fragment() {
         return inflater.inflate(R.layout.appro_fragment, container, false)
 
     }
-
+    // Parses the time format received from server
     private fun dateParser(date:String): String{
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         val dateTime = LocalDateTime.parse(date,formatter)
