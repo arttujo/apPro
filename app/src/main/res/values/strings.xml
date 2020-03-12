@@ -41,4 +41,9 @@
     <string name="approImageHere">Appro Image goes here</string>
     <string name="splashScreen">Splash screen with app logo</string>
     <string name="approStamp">Stamp</string>
+    <string name="alreadyHasStamp">You have already collected this stamp</string>
+    <string name="stampAdded">Stamp added for:</string>
+    <string name="aboutPage">Information about this page:</string>
+    <string name="aboutMessage">In this page you are able to see your current progress. Visit bars, buy drinks, and collect stamps.</string>
+
 </resources>

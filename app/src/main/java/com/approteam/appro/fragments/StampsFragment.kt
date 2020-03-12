@@ -59,14 +59,14 @@ class StampsFragment(ctx: Context) : Fragment() {
                             Log.d("DBG", "Stamp already added")
                             Toast.makeText(
                                 c,
-                                "You have already collected this stamp",
+                                getString(R.string.alreadyHasStamp),
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
                             Log.d("DBG, add", "Adding stamp")
                             Toast.makeText(
                                 c,
-                                "Stamp added for: $barcode",
+                                 getString(R.string.stampAdded)+ " $barcode",
                                 Toast.LENGTH_SHORT
                             ).show()
                             bar.visited = true
@@ -86,8 +86,8 @@ class StampsFragment(ctx: Context) : Fragment() {
         val dialogPrefs = getDialogPrefs(c)
         if (!dialogPrefs) {
             val alertDialogBuilder = AlertDialog.Builder(c)
-            alertDialogBuilder.setTitle("Information about this page:")
-            alertDialogBuilder.setMessage("In this page you are able to see your current progress. Visit bars, buy drinks, and collect stamps.")
+            alertDialogBuilder.setTitle(getString(R.string.aboutPage))
+            alertDialogBuilder.setMessage(getString(R.string.aboutMessage))
             alertDialogBuilder.setPositiveButton("OK!") { _, _ ->
                 dialogPrefs(c)
             }

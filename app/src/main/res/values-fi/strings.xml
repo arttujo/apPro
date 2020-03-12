@@ -42,4 +42,8 @@
     <string name="approImageHere">Appron kuva tähän</string>
     <string name="splashScreen">Käynnistys ruutu apin logolla</string>
     <string name="approStamp">Leima</string>
+    <string name="alreadyHasStamp">Sinulla on jo kyseinen leima</string>
+    <string name="stampAdded">Leima saatu:</string>
+    <string name="aboutPage">Tietoa tästä sivusta:</string>
+    <string name="aboutMessage">"Tältä sivulta näät kuinka monta leimaa olet hankkinut. "</string>
 </resources>
