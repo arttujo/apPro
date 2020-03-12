@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/createApproInfo"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="30dp"
+        android:textSize="25sp"
+        android:gravity="center_horizontal"
+        android:text="@string/createAppro" />
 
     <EditText
         android:id="@+id/editApproName"
@@ -43,9 +54,7 @@
         android:id="@+id/cancelButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="10dp"
-
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="4dp"
         android:text="@string/cancel"
@@ -65,7 +74,7 @@
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createApproInfo"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button

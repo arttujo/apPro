@@ -9,6 +9,8 @@ import com.approteam.appro.R
 import com.approteam.appro.data_models.Appro
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.home_list_item.view.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class HomeViewAdapter(
@@ -40,6 +42,13 @@ class HomeViewAdapter(
 class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val picasso = Picasso.get()
 
+    private fun dateParser(date:String): String{
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        val dateTime = LocalDateTime.parse(date,formatter)
+        val formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        return dateTime.format(formatter2)
+    }
+
     fun bind(ctx: Context, pos: Int, item: Appro, listener: (Appro) -> Unit) = with(itemView) {
         cardTitle.text = item.name
         cardDesc.text = item.description
@@ -48,5 +57,8 @@ class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         cardImage.transitionName = item.image
         cardTitle.transitionName = item.name
         cardDesc.transitionName = item.description
+        cardPrice.text = item.price.toString() +" €"
+        val date = item.date
+        cardDate.text = dateParser(date!!)
     }
 }

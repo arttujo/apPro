@@ -15,6 +15,8 @@ import com.approteam.appro.data_models.Appro
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.appro_fragment.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class ApproFragment(ctx: Context) : Fragment() {
@@ -36,6 +38,13 @@ class ApproFragment(ctx: Context) : Fragment() {
 
     }
 
+    private fun dateParser(date:String): String{
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        val dateTime = LocalDateTime.parse(date,formatter)
+        val formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        return dateTime.format(formatter2)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cardImageAp.transitionName = arguments?.getString("approPic")
@@ -44,6 +53,10 @@ class ApproFragment(ctx: Context) : Fragment() {
         cardTitleAp.text = arguments?.getString("approName")
         val imageItem = arguments?.getString("approPic")
         cardDescAp.text = arguments?.getString("approDesc")
+        approPrice.text = arguments?.getInt("approPrice").toString() + " €"
+        appro_date.text = dateParser(arguments?.getString("approDate")!!)+ ", "
+        appro_time.text = arguments?.getString("approTime")
+        appro_location.text = "@ "+arguments?.getString("approLocation")
         picasso.load(imageItem).into(cardImageAp)
         setupBundle()
         val json = arguments?.getString("approJson")

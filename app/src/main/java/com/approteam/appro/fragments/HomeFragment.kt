@@ -140,6 +140,10 @@ class HomeFragment(ctx: Context) : Fragment() {
                 bundle.putString("approName", it.name)
                 bundle.putString("approDesc", it.description)
                 bundle.putString("approPic", it.image)
+                bundle.putString("approDate",it.date)
+                bundle.putString("approTime", it.time)
+                bundle.putString("approLocation",it.location)
+                bundle.putInt("approPrice",it.price!!)
                 bundle.putString("approJson", approString)
                 approFragment.arguments = bundle
                 activity?.supportFragmentManager?.beginTransaction()?.setCustomAnimations(

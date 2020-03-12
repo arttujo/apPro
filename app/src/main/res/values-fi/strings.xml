@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">apPro</string>
     <string name="title_activity_maps">Kartta</string>
+    <string name="approList">Nykyiset ja tulevat approt</string>
+    <string name="createAppro">Luo Appro</string>
+    <string name="showBars">Näytä approon sisältyvät baarit</string>
+    <string name="joinAppro">Liity Tähän Approon!</string>
     <string name="map">Kartta</string>
     <string name="scan">Skannaus</string>
     <string name="home">Koti</string>

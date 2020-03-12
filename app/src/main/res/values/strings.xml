@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">apPro</string>
+    <string name="approList">Current and Upcoming Appros</string>
+    <string name="createAppro">Create Appro</string>
+    <string name="showBars">Show Bars For This Appro</string>
+    <string name="joinAppro">Join This Appro!</string>
     <string name="title_activity_maps">Map</string>
     <string name="map">Map</string>
     <string name="scan">Scan</string>

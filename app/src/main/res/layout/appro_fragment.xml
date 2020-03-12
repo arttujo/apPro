@@ -7,73 +7,130 @@
     android:layout_height="match_parent"
     android:tag="ApproFragment"
     android:orientation="vertical"
+    android:background="@drawable/border"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
     >
+
 
     <ImageView
         android:id="@+id/cardImageAp"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="189dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginTop="1dp"
         android:adjustViewBounds="true"
+        android:contentDescription="Card Image"
+        android:paddingTop="6dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/cardTitleAp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="7dp" />
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/cardTitleAp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="25dp"
-        android:padding="8dp"
-        android:text="temporary"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/cardDescAp"
-        app:layout_constraintTop_toBottomOf="@+id/cardImageAp"
-        tools:layout_editor_absoluteX="0dp"
-
-
-        />
-
-    <TextView
-        android:id="@+id/cardDescAp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="temporary"
+        android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardTitleAp"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/cardImageAp">
 
-    <Button
-        android:id="@+id/btnShowBars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="40dp"
-        android:gravity="center_horizontal"
-        android:text="Show bars for this appro"
-        app:layout_constraintBottom_toTopOf="@+id/btnJoinAppro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/cardTitleAp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnJoinAppro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="131dp"
-        android:layout_marginEnd="131dp"
-        android:layout_marginBottom="56dp"
-        android:text="Join this appro"
+        <TextView
+            android:id="@+id/cardDescAp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp"
+            android:text="temporary"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/approPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="approPrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/appro_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="appro_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardTitleAp" />
+
+        <TextView
+            android:id="@+id/appro_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:text="appro_time"
+            app:layout_constraintStart_toEndOf="@+id/appro_date"
+            app:layout_constraintTop_toBottomOf="@+id/cardTitleAp" />
+
+        <TextView
+            android:id="@+id/appro_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="appro_location"
+            app:layout_constraintStart_toEndOf="@+id/appro_time"
+            app:layout_constraintTop_toBottomOf="@+id/cardTitleAp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        tools:layout_editor_absoluteX="4dp">
+
+        <Button
+            android:id="@+id/btnShowBars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/showBars"
+            app:layout_constraintBottom_toTopOf="@+id/btnJoinAppro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnJoinAppro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:gravity="center_horizontal"
+            android:text="@string/joinAppro"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
