@@ -125,8 +125,17 @@ class MainActivity : AppCompatActivity(), ApproStatusListener {
         } else {
             listener?.onApproUpdate(true)
         }
-        // Viewpager adapter set
 
+    }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        val approJson = getCurrentApproData(this)
+        if (approJson == "NULL") {
+            listener?.onApproUpdate(false)
+        } else {
+            listener?.onApproUpdate(true)
+        }
     }
 
     //creates a listener for the bottom navigation buttons
