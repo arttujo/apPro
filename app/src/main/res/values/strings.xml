@@ -31,10 +31,12 @@
     <string name="price">Price €</string>
     <string name="location">Location</string>
     <string name="aboutToCreate">Are you sure you want to create Appro with bars:</string>
-    <string name="time">Time (16:00)</string>
+    <string name="time">Time(Format: 16:00)</string>
     <string name="approCreated">Appro Created!</string>
     <string name="approNotCreated">Appro with the given name already exists</string>
     <string name="totalBars">Total Bars:</string>
     <string name="noData">No Data</string>
     <string name="approImage">Appro Image</string>
+    <string name="pickApproDate">Pick Appro Date</string>
+    <string name="approImageHere">Appro Image goes here</string>
 </resources>

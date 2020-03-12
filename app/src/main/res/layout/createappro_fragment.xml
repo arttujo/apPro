@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:importantForAutofill="no"
+    >
 
     <TextView
         android:id="@+id/createApproInfo"
@@ -15,6 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_height="30dp"
         android:textSize="25sp"
+        android:importantForAutofill="no"
         android:gravity="center_horizontal"
         android:text="@string/createAppro" />
 
@@ -25,6 +27,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
+        android:importantForAutofill="no"
         android:background="@drawable/border"
         android:hint="@string/nameOfAppro"
         android:inputType="text"
@@ -38,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginStart="10dp"
+        android:importantForAutofill="no"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/border"
@@ -69,6 +73,7 @@
         android:layout_height="160dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="@string/approImageHere"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:layout_marginEnd="10dp"
@@ -112,6 +117,7 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/border"
         android:ems="10"
+        android:importantForAutofill="no"
         android:hint="@string/price"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,6 +133,7 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/border"
         android:ems="10"
+        android:importantForAutofill="no"
         android:hint="@string/location"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +147,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
-        android:text="Pick Appro Date"
+        android:text="@string/pickApproDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -150,6 +157,7 @@
         android:id="@+id/approTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"

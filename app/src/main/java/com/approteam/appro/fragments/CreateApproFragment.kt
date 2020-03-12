@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import com.approteam.appro.R
 import kotlinx.android.synthetic.main.createappro_fragment.*
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class CreateApproFragment(ctx: Context) : Fragment() {
@@ -27,7 +29,9 @@ class CreateApproFragment(ctx: Context) : Fragment() {
     private var imageData: ByteArray? = null
     private var date: String? = null
     private var imageUri: Uri? = null
-
+    private var pattern: Pattern? = null
+    private var matcher: Matcher? = null
+    private val TIME_24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +41,12 @@ class CreateApproFragment(ctx: Context) : Fragment() {
             View? {
 
         return inflater.inflate(R.layout.createappro_fragment, container, false)
+    }
+
+    private fun validateTime(time: String?): Boolean {
+        matcher = pattern!!.matcher(time)
+
+        return matcher!!.matches()
     }
 
     //Adds listeners to the input fields
@@ -64,6 +74,7 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        time24HoursValidator()
         val btn = view.findViewById<Button>(R.id.cancelButton)
         val openCalbtn = view.findViewById<Button>(R.id.datePickerOpen)
         selectBars.isEnabled = false
@@ -106,11 +117,24 @@ class CreateApproFragment(ctx: Context) : Fragment() {
 
         btn?.setOnClickListener {
             // return to home fragment
+            imageData = null
+            date = null
+            editApproName.text.clear()
+            editApproDesc.text.clear()
+            priceField.text.clear()
+            approLocation.text.clear()
+            approTime.text.clear()
             activity?.supportFragmentManager?.popBackStack()
 
 
         }
     }
+
+
+    private fun time24HoursValidator() {
+        pattern = Pattern.compile(TIME_24HOURS_PATTERN)
+    }
+
 
     //Listens to the the input fields. used to check if the fields are empty or not
     private val textWatcher: TextWatcher = object : TextWatcher {
@@ -141,8 +165,9 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         val nameInput = editApproName!!.text.toString().trim { it <= ' ' }
         val descInput = editApproDesc!!.text.toString().trim { it <= ' ' }
         val timeInput = approTime!!.text.toString().trim { it <= ' ' }
+        val matches = validateTime(timeInput)
         selectBars.isEnabled =
-            priceInput.isNotEmpty() && locationInput.isNotEmpty() && nameInput.isNotEmpty() && descInput.isNotEmpty() && timeInput.isNotEmpty() && date != null && imageData != null
+            priceInput.isNotEmpty() && locationInput.isNotEmpty() && nameInput.isNotEmpty() && descInput.isNotEmpty() && timeInput.isNotEmpty() && date != null && imageData != null && matches
     }
 
     //Creates Image data for the selected image
@@ -174,6 +199,8 @@ class CreateApproFragment(ctx: Context) : Fragment() {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+
 
 
 }

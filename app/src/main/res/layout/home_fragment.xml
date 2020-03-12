@@ -45,11 +45,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/approListRView"
         android:layout_width="match_parent"
-        android:layout_height="540dp"
-        android:layout_marginTop="16dp"
-        android:scrollbars="vertical"
+        android:layout_height="610dp"
+        android:layout_marginBottom="15dp"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/createButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeInfo" />

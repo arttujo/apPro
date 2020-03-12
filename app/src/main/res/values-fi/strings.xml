@@ -32,10 +32,12 @@
     <string name="price">Hinta €</string>
     <string name="location">Sijainti</string>
     <string name="aboutToCreate">Oletko varma, että luot appron näillä baareilla:</string>
-    <string name="time">Aika (16:00)</string>
+    <string name="time">Aika(Mudossa: 16:00)</string>
     <string name="approCreated">Appro luotu!</string>
     <string name="approNotCreated">Kyseinen appro on jo olemassa!</string>
     <string name="totalBars">Baarien määrä:</string>
     <string name="noData">Ei Dataa</string>
     <string name="approImage">Appron kuva</string>
+    <string name="pickApproDate">Valitse päivämäärä</string>
+    <string name="approImageHere">Appron kuva tähän</string>
 </resources>
